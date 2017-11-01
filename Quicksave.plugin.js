@@ -2,14 +2,16 @@
 
 class Quicksave {
 	get local() {
-		let lang = "";
-		if (document.documentElement.getAttribute('lang')) lang = document.documentElement.getAttribute('lang').split('-')[0];
+		let lang = navigator.language;
+		if (document.documentElement.getAttribute('lang')) 
+			lang = document.documentElement.getAttribute('lang').split('-')[0];
 		switch (lang) {
 			case "es": // Spanish
 				return {
 					startMessage: "${pluginName} ${version} ha empezado",
 					description: 'Le permite guardar imágenes rápidamente con un nombre corto y aleatorio',
 					quicksave: "Guardar imagen",
+					as: 'como',
 					finished: 'Finalizado',
 					showFn: "Imagen guardada como ${filename}",
 					saveFail: "Hubo un problema al guardar la imagen.",
@@ -18,10 +20,14 @@ class Quicksave {
 					reset: "Reajustar configuraciones",
 					downloading: 'Bajando...',
 					noFreeName: 'Error: Ha fallado al encontrar un nombre libre',
-					alreadyExists: 'Error: Archivo ${filename} ya existe',
+					alreadyExists: 'Archivo ${filename} ya existe',
 					alreadyExistsAndGenerateNew: 'Error: Archivo ${filename} ya existe. Generando un nuevo nombre para ello...',
 					insertFilename: 'Insira el nombre del archivo',
 					cancel: 'Cancelar',
+					genRandom: 'Generar aleatorio',
+					overwrite: 'Sustituir',
+					chooseNew: 'Elegir nuevo nombre',
+					question: '¿Qué vas a hacer?',
 					settings: {
 						panel: 'Panel de configuraciones',
 						labels: {
@@ -45,6 +51,7 @@ class Quicksave {
 					startMessage: "${pluginName} ${version} iniciado",
 					description: 'Permite salvar imagens rapidamente com um nome curto e aleatório',
 					quicksave: "Salvar imagem",
+					as: 'como',
 					finished: 'Finalizado',
 					filename: "Imagem salva como ${filename}",
 					saveFail: "Houve um problema ao salvar a imagem",
@@ -53,21 +60,27 @@ class Quicksave {
 					reset: "Redefinir configurações",
 					downloading: 'Baixando...',
 					noFreeName: 'Erro: Falha ao encontrar um nome disponível',
-					alreadyExists: 'Erro: Arquivo ${filename} já existe',
+					alreadyExists: 'Arquivo ${filename} já existe',
 					alreadyExistsAndGenerateNew: 'Error: Arquivo ${filename} já existe. Gerando um novo nome para ele...',
 					insertFilename: 'Insira o nome do arquivo',
 					cancel: 'Cancelar',
+					genRandom: 'Gerar aleatório',
+					overwrite: 'Substituir',
+					chooseNew: 'Escolher novo nome',
+					question: 'O que você deseja fazer?',
 					settings: {
 						panel: 'Painel de configurações',
 						labels: {
 							directory: 'Diretório',
 							original: 'Manter o nome original',
 							filename: 'Mostrar nome do arquivo ao terminar de baixar',
-							randomLength: 'Tamanho do nome aleatório'
+							randomLength: 'Tamanho do nome aleatório',
+							autoAddNum: 'Adicionar (n) ao final dos arquivos automaticamente'
 						},
 						help: {
 							original: 'Salvar arquivos com o nome original em vez de um aleatório',
-							filename: 'Mostrar o nome do arquivo ao finalizar ou não'
+							filename: 'Mostrar o nome do arquivo ao finalizar ou não',
+							autoAddNum: 'Ao salvar um arquivo com um nome já existente, adicionar (n) ao final do nome'
 						},
 						protip: {
 							label: 'Fica a dica:',
@@ -79,7 +92,8 @@ class Quicksave {
 				return {
 					startMessage: "${pluginName} ${version} has started.",
 					description: 'Lets you save images fast with a short random name',
-					quicksave: "Quicksave",
+					quicksave: "Save image",
+					as: 'as',
 					finished: 'Finished',
 					filename: "Image saved as ${filename}",
 					saveFail: "There was an issue saving the image.",
@@ -88,10 +102,14 @@ class Quicksave {
 					reset: "Reset settings",
 					downloading: 'Downloading...',
 					noFreeName: 'Error: Failed to find a free file name',
-					alreadyExists: 'Error: File ${filename} already exists',
+					alreadyExists: 'File ${filename} already exists',
 					alreadyExistsAndGenerateNew: 'Error: File ${filename} already exists. Generating new name for it...',
 					insertFilename: 'Insert file name',
 					cancel: 'Cancel',
+					genRandom: 'Generate random',
+					overwrite: 'Overwrite',
+					chooseNew: 'Choose new name',
+					question: 'Whatcha gonna do?',
 					settings: {
 						panel: 'Settings panel',
 						labels: {
@@ -112,11 +130,11 @@ class Quicksave {
 				};
 		}
 	}
-	getAuthor()      { return "Nirewen"             }
-	getName()        { return "Quicksave"           }
+	getAuthor     () { return "Nirewen"             }
+	getName       () { return "Quicksave"           }
 	getDescription() { return this.local.description}
-	getVersion()     { return "0.1.8"               }
-	start() {
+	getVersion    () { return "0.1.8"               }
+	start         () {
 		let self = this;
 		$('#zeresLibraryScript').remove();
 		$('head').append($("<script type='text/javascript' id='zeresLibraryScript' src='https://rauenzi.github.io/BetterDiscordAddons/Plugins/PluginLibrary.js'>"));
@@ -133,8 +151,11 @@ class Quicksave {
 		this.initialized = true;
 		this.loadSettings();
 	}
-	stop() {BdApi.clearCSS(this.getName())}
-	load() {BdApi.injectCSS(`${this.getName()}-inputs`, this.inputCSS)}
+	stop  () {
+		BdApi.clearCSS(this.getName());
+		this.initialized = false;
+	}
+	load  () {BdApi.injectCSS(`${this.getName()}-inputs`, this.inputCSS)}
 	unload() {BdApi.clearCSS(`${this.getName()}-inputs`)}
 	accessSync(dir) {
 		let fs = require('fs');
@@ -151,36 +172,51 @@ class Quicksave {
 		setTimeout(() => modal.remove(), 100);
 	}
 	
-	openModal(modal) {
+	openModal(modal, type) {
 		if (document.querySelector('.app-XZYfmp')) 
 			$('.app-XZYfmp').siblings('[class*="theme-"]:not(.popouts)').first().append(modal);
 		else 
 			$('.app').siblings('[class*="theme-"]').first().append(modal);
-		let self     = this,
-			url      = $('.modal-image')[0].childNodes[1].attributes[0].nodeValue,
-			filetype = '.' + url.split('.').slice(-1)[0].split('?')[0];
-			
-		modal.find('.hint').html(modal.find('.filename').val() + filetype);
-		modal.find('.footer .button').click(e => self.closeModal(modal));
-		modal.find('.footer .button-primary').click(e => self.saveCurrentImage(modal.find('.filename').val()));
-		modal.find('.filename')
-			.on("input", e => modal.find('.hint').html(modal.find('.filename').val() + filetype))
-			.on("keyup", e => {
-				let code = e.keyCode || e.which;
-				if (code == 13) {
-					e.preventDefault();
-					self.saveCurrentImage(modal.find('.filename').val());
-					self.closeModal(modal);
-				}
-			})
-			.focus();
+		this.bindEvents(modal, type);
+	}
+	
+	bindEvents(modal, type) {
+		let self = this;
+		switch (type) {
+			case 'filenameChoose': {
+				let url      = $('.modal-image')[0].childNodes[1].attributes[0].nodeValue,
+					filetype = '.' + url.split('.').slice(-1)[0].split('?')[0];
+					
+				modal.find('.hint').html(filetype);
+				modal.find('.footer .button').click(e => self.closeModal(modal));
+				modal.find('.footer .button-primary').click(e => self.saveCurrentImage(modal.find('.filename').val()));
+				modal.find('.filename')
+					.on("input", e => modal.find('.hint').html(modal.find('.filename').val() + filetype))
+					.on("keyup", e => {
+						let code = e.keyCode || e.which;
+						if (code == 13) {
+							e.preventDefault();
+							self.saveCurrentImage(modal.find('.filename').val());
+							self.closeModal(modal);
+						}
+					})
+					.focus();
+			}
+			case 'error': {
+				modal.find('button.cancel').click(e => self.closeModal(modal));
+				modal.find('button.overwrite').click(e => self.saveCurrentImage(null, true));
+				modal.find('button.gen-random').click(e => self.saveCurrentImage());
+				modal.find('button.choose-new').click(e => self.openModal($(PluginUtilities.formatString(self.modals.name, {insertFilename: this.local.insertFilename, cancel: this.local.cancel, save: this.local.save})), 'filenameChoose'));
+				modal.find('.button').click(e => self.closeModal(modal));
+			}
+		}
 	}
 
 	observer(e) {
 		let fs   = require('fs'),
 			self = this;
-		if (e.addedNodes.length > 0 && (e.addedNodes[0].className == 'callout-backdrop' || e.addedNodes[0].className == 'backdrop-2ohBEd')) {
-			let elem   = $('.modal-image a');
+		if (e.addedNodes.length > 0 && /callout-backdrop|backdrop-2ohBEd/.test(e.addedNodes[0].className)) {
+			let elem = $('.modal-image a');
 			if (!elem) return;
 			
 			fs.access(this.settings.directory, fs.W_OK, err => {
@@ -189,9 +225,13 @@ class Quicksave {
 					button.html(this.local.invalidLocation);
 				else {
 					button.html(this.local.quicksave);
+					$(document).on("keydown.qs", e => {
+						if (e.shiftKey)
+							button.html(`${this.local.quicksave} ${this.local.as}`);
+					}).on('keyup.qs', e => button.html(this.local.quicksave));
 					button.click(e => {
 						if (e.shiftKey)
-							self.openModal($(PluginUtilities.formatString(self.modalHTML, {insertFilename: this.local.insertFilename, cancel: this.local.cancel, save: this.local.save})));
+							self.openModal($(PluginUtilities.formatString(self.modals.name, {insertFilename: this.local.insertFilename, cancel: this.local.cancel, save: this.local.save})), 'filenameChoose');
 						else
 							self.saveCurrentImage();
 					});
@@ -215,10 +255,13 @@ class Quicksave {
 	}
 	generateSettings(panel) {
 		new PluginSettings.ControlGroup(this.local.settings.panel, () => this.saveSettings(), {shown: true}).appendTo(panel).append(
-			new PluginSettings.SettingField(this.local.settings.labels.directory, '', {type: "text", placeholder: 'none', value: this.settings.directory, width:'400', class: 'quicksave input'}, text => {
+			new PluginSettings.Textbox(this.local.settings.labels.directory, '', this.settings.directory, 'none', text => {
 				text.endsWith('/') 
 					? this.settings.directory = text
 					: this.settings.directory = text + '/';
+			}, {
+				width: '400px',
+				class: 'quicksave input'
 			}), 
 			new PluginSettings.Checkbox(this.local.settings.labels.original, this.local.settings.help.original, this.settings.norandom, checked => {
 				this.settings.norandom = checked;
@@ -228,6 +271,9 @@ class Quicksave {
 			}), 
 			new PluginSettings.SettingField(this.local.settings.labels.randomLength, '', {type: 'number', value: `${this.settings.fnLength}`, class: 'quicksave input', min: '1'}, number => {
 				this.settings.fnLength = number;
+			}),
+			new PluginSettings.Checkbox(this.local.settings.labels.autoAddNum, this.local.settings.help.autoAddNum, this.settings.addnum, checked => {
+				this.settings.addnum = checked;
 			}),
 			$(`<div class='protip inline'>
 				<label class='label'>${this.local.settings.protip.label}</label>
@@ -242,6 +288,13 @@ class Quicksave {
 				})
 		);
 	}
+	
+	addNumber(filename, type, i = 0) {
+		let temp = filename + (i > 0 ? ` (${i})` : '');
+		if (this.accessSync(this.settings.directory + temp + type))
+			return this.addNumber(filename, type, i + 1);
+		return temp;
+	}
 
 	randomFilename64(length) {
 		let name = '';
@@ -250,7 +303,7 @@ class Quicksave {
 		return name;
 	}
 
-	saveCurrentImage(filename = '') {
+	saveCurrentImage(filename, overwrite = false) {
 		let button = $('#qs_button'),
 			fs     = require('fs'),
 			dir    = this.settings.directory,
@@ -260,31 +313,38 @@ class Quicksave {
 		if (/:large$/.test(url))
 			url = url.replace(/:large$/, '');
 		
+		if (this.settings.norandom)
+			filename = url.split('/').slice(-1)[0].split('?')[0].split('.')[0];
+		
+		if (!filename && !overwrite && !this.settings.addnum) 
+			filename = this.randomFilename64(this.settings.fnLength);
+
+		let filetype  = '.' + url.split('.').slice(-1)[0].split('?')[0],
+			tries = 50;
+		
+		if (this.settings.addnum)
+			filename = this.addNumber(filename, filetype);
+		
+		if (this.accessSync(dir + filename + filetype) && !overwrite && !this.settings.addnum) {
+			return this.openModal($(PluginUtilities.formatString(this.modals.error, {
+				alreadyExists: PluginUtilities.formatString(this.local.alreadyExists, {filename: filename + filetype}),
+				question: this.local.question,
+				cancel: this.local.cancel,
+				chooseNew: this.local.chooseNew,
+				overwrite: this.local.overwrite,
+				genRandom: this.local.genRandom
+			})), 'error');
+		}
+		
 		button.html(this.local.downloading);
 		
-		if (this.settings.norandom) {
-			filename = url.split('/').slice(-1)[0].split('?')[0];
-
-			if (this.accessSync(dir + filename))
-				return PluginUtilities.showToast(PluginUtilities.formatString(this.local.alreadyExists, {filename}), {type: 'error'});
-		} else {
-			if (filename == '') 
-				filename = this.randomFilename64(this.settings.fnLength);
-
-			let filetype  = '.' + url.split('.').slice(-1)[0].split('?')[0],
-				tries = 50;
-			
-			if (this.accessSync(dir + filename + filetype))
-				PluginUtilities.showToast(PluginUtilities.formatString(this.local.alreadyExistsAndGenerateNew, {filename}), {type: 'warning'});
-			
-			while (this.accessSync(dir + filename + filetype) && tries--)
-				filename = this.randomFilename64(this.settings.fnLength);
-			
-			if (tries == -1)
-				return PluginUtilities.showToast(this.local.noFreeName, {type: 'error'});
-			
-			filename += filetype;
-		}
+		while (this.accessSync(dir + filename + filetype) && tries-- && !overwrite && !this.settings.addnum && !this.settings.norandom)
+			filename = this.randomFilename64(this.settings.fnLength);
+		
+		if (tries == -1)
+			return PluginUtilities.showToast(this.local.noFreeName, {type: 'error'});
+		
+		filename += filetype;
 
 		let dest = dir + filename,
 			file = fs.createWriteStream(dest),
@@ -311,34 +371,70 @@ class Quicksave {
 			directory: 'none',
 			norandom: false,
 			fnLength: 4,
-			showfn: true
+			showfn: true,
+			addnum: false
 		}
 	}
-	get modalHTML() {
-		return "<div id='quicksave-modal-wrapper'>" +
-			"<div class='callout-backdrop backdrop-2ohBEd'></div>" +
-			"<div class='modal-2LIEKY' style='opacity: 1; transform: scale(1) translateZ(0px);'>" +
-				"<div class='modal-body inner-1_1f7b'>" +
-					"<div class='comment'>" +
-						"<div class='label'>" +
-							"<span>${insertFilename}:</span>" +
-						"</div>" +
-						"<div class='inner'>" +
-							"<input class='filename' maxlength='37'>" +
-							"<div class='hint'></div>" +
+	get modals() {
+		return {
+			name: "<div id='quicksave-modal-wrapper'>" +
+					"<div class='callout-backdrop backdrop-2ohBEd'></div>" +
+					"<div class='modal-2LIEKY' style='opacity: 1; transform: scale(1) translateZ(0px);'>" +
+						"<div class='modal-body inner-1_1f7b'>" +
+							"<div class='comment'>" +
+								"<div class='label'>" +
+									"<span>${insertFilename}:</span>" +
+								"</div>" +
+								"<div class='inner'>" +
+									"<input class='filename' maxlength='37'>" +
+									"<div class='hint'></div>" +
+								"</div>" +
+							"</div>" +
+							"<div class='footer'>" +
+								"<button type='button' class='button cancel'>" +
+									"<span>${cancel}</span>" +
+								"</button>" +
+								"<button type='button' class='button button-primary save'>" +
+									"<span>${save}</span>" +
+								"</button>" +
+							"</div>" +
 						"</div>" +
 					"</div>" +
-					"<div class='footer'>" +
-						"<button type='button' class='button'>" +
-							"<span>${cancel}</span>" +
-						"</button>" +
-						"<button type='button' class='button button-primary'>" +
-							"<span>${save}</span>" +
-						"</button>" +
-					"</div>" +
-				"</div>" +
-			"</div>" +
-		"</div>";
+				"</div>",
+			error: '<div id="quicksave-modal-wrapper">' +
+					'<div class="callout-backdrop backdrop-2ohBEd"></div>' +
+					'<div class="modal-2LIEKY" style="opacity: 1; transform: scale(1) translateZ(0px);">' +
+						'<div class="inner-1_1f7b">' +
+							'<form class="modal-3HOjGZ container-2hX5wK">' +
+								'<div class="flex-lFgbSz flex-3B1Tl4 horizontal-2BEEBe horizontal-2VE-Fw flex-3B1Tl4 directionRow-yNbSvJ justifyStart-2yIZo0 alignCenter-3VxkQP noWrap-v6g9vO header-3sp3cE" style="flex: 0 0 auto;">' +
+									'<h4 class="h4-2IXpeI title-1pmpPr size16-3IvaX_ height20-165WbF weightSemiBold-T8sxWH defaultColor-v22dK1 header-JzU4_V">' +
+										'${alreadyExists}</h4>' +
+								'</div>' +
+								'<div class="scrollerWrap-2uBjct content-1Cut5s scrollerThemed-19vinI themeGhostHairline-2H8SiW">' +
+									'<div class="scroller-fzNley inner-tqJwAU content-1a0qkZ">' +
+										'<div class="spacing-CsDO_x marginBottom20-2Ifj-2 medium-2KnC-N size16-3IvaX_ height20-165WbF primary-2giqSn">' +
+											'${question}</div>' +
+									'</div>' +
+								'</div>' +
+								'<div class="flex-lFgbSz flex-3B1Tl4 horizontalReverse-2LanvO horizontalReverse-k5PqxT flex-3B1Tl4 directionRowReverse-2eZTxP justifyStart-2yIZo0 alignStretch-1hwxMa noWrap-v6g9vO footer-1PYmcw" style="flex: 0 0 auto;">' +
+									'<button type="button" class="button choose-new">' +
+										'<div class="contentsDefault-nt2Ym5 contents-4L4hQM contentsFilled-3M8HCx contents-4L4hQM">${chooseNew}</div>' +
+									'</button>' +
+									'<button type="button" class="button gen-random">' +
+										'<div class="contentsDefault-nt2Ym5 contents-4L4hQM contentsFilled-3M8HCx contents-4L4hQM">${genRandom}</div>' +
+									'</button>' +
+									'<button type="button" class="button red overwrite">' +
+										'<div class="contentsDefault-nt2Ym5 contents-4L4hQM contentsFilled-3M8HCx contents-4L4hQM">${overwrite}</div>' +
+									'</button>' +
+									'<button type="button" class="buttonPrimaryLinkDefault-1PQflF buttonLinkDefault-3J8pja buttonDefault-2OLW-v button-2t3of8 mediumGrow-uovsMu cancel">' +
+										'<div class="contentsDefault-nt2Ym5 contents-4L4hQM contentsLink-2ScJ_P contents-4L4hQM">${cancel}</div>' +
+									'</button>' +
+								'</div>' +
+							'</form>' +
+						'</div>' +
+					'</div>' +
+				'</div>'
+		}
 	}
 	get css() {
 		return `
@@ -363,14 +459,15 @@ class Quicksave {
 		}
 
 		#quicksave-modal-wrapper.closing .callout-backdrop {
-			animation: quicksave-backdrop-closing 200ms linear;
+			animation: quicksave-backdrop-closing 100ms linear;
 			animation-fill-mode: forwards;
 			animation-delay: 50ms;
 			opacity: 0.85;
 		}
 
-		#quicksave-modal-wrapper.closing .modal-body {
-			animation: quicksave-modal-wrapper-closing 250ms cubic-bezier(0.19, 1, 0.22, 1);
+		#quicksave-modal-wrapper.closing .modal-body,
+		#quicksave-modal-wrapper.closing .container-2hX5wK {
+			animation: quicksave-modal-wrapper-closing 100ms cubic-bezier(0.19, 1, 0.22, 1);
 			animation-fill-mode: forwards;
 			opacity: 1;
 			transform: scale(1);
@@ -442,22 +539,29 @@ class Quicksave {
 			justify-content: flex-end;
 			padding: 10px;
 		}
-		#quicksave-modal-wrapper .footer .button {
+		#quicksave-modal-wrapper .button {
+			margin: 0 3px;
 			background-color: #5b6dae;
 			height: 36px;
 			min-width: 84px;
-			padding: 0!important;
+			padding: 3px !important;
 		}
-		#quicksave-modal-wrapper .footer .button-primary {
+		#quicksave-modal-wrapper .button.red {
+			background-color: #f04747;
+		}
+		#quicksave-modal-wrapper .button-primary {
 			background-color: #fff;
 			color: #5b6dae;
 			transition: opacity .2s ease-in-out;
 		}
-		#quicksave-modal-wrapper .modal-body {
+		#quicksave-modal-wrapper .modal-body,
+		#quicksave-modal-wrapper .container-2hX5wK {
 			animation: quicksave-modal-wrapper 250ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 			animation-fill-mode: forwards;
 			transform: scale(0.7);
 			transform-origin: 50% 50%;
+		}
+		#quicksave-modal-wrapper .modal-body {
 			color: #fff;
 			margin: 0;
 			opacity: 0;
