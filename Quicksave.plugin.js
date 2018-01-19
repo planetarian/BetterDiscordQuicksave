@@ -1,5 +1,7 @@
 //META{"name":"Quicksave"}*//
 
+/* global $, PluginUtilities, navigator, BdApi, PluginSettings */
+
 class Quicksave {
 	get local() {
 		let lang = navigator.language;
@@ -20,14 +22,22 @@ class Quicksave {
 					reset: "Reajustar configuraciones",
 					downloading: 'Bajando...',
 					noFreeName: 'Error: Ha fallado al encontrar un nombre libre',
-					alreadyExists: 'Archivo ${filename} ya existe',
-					alreadyExistsAndGenerateNew: 'Error: Archivo ${filename} ya existe. Generando un nuevo nombre para ello...',
-					insertFilename: 'Insira el nombre del archivo',
-					cancel: 'Cancelar',
-					genRandom: 'Generar aleatorio',
-					overwrite: 'Sustituir',
-					chooseNew: 'Elegir nuevo nombre',
-					question: '¿Qué vas a hacer?',
+					modals: {
+						generalButtons: {
+							cancel: 'Cancelar',
+							save: 'Guardar'
+						},
+						filenameChoose: {
+							insertFilename: 'Insira el nombre del archivo'
+						},
+						error: {
+							alreadyExists: 'Archivo ${filename} ya existe',
+							genRandom: 'Generar aleatorio',
+							overwrite: 'Sustituir',
+							chooseNew: 'Elegir nuevo nombre',
+							question: '¿Qué vas a hacer?'
+						}
+					},
 					settings: {
 						panel: 'Panel de configuraciones',
 						labels: {
@@ -60,14 +70,22 @@ class Quicksave {
 					reset: "Redefinir configurações",
 					downloading: 'Baixando...',
 					noFreeName: 'Erro: Falha ao encontrar um nome disponível',
-					alreadyExists: 'Arquivo ${filename} já existe',
-					alreadyExistsAndGenerateNew: 'Error: Arquivo ${filename} já existe. Gerando um novo nome para ele...',
-					insertFilename: 'Insira o nome do arquivo',
-					cancel: 'Cancelar',
-					genRandom: 'Gerar aleatório',
-					overwrite: 'Substituir',
-					chooseNew: 'Escolher novo nome',
-					question: 'O que você deseja fazer?',
+					modals: {
+						generalButtons: {
+							cancel: 'Cancelar',
+							save: 'Salvar'
+						},
+						filenameChoose: {
+							insertFilename: 'Insira o nome do arquivo'
+						},
+						error: {
+							alreadyExists: 'Arquivo ${filename} já existe',
+							genRandom: 'Gerar aleatório',
+							overwrite: 'Substituir',
+							chooseNew: 'Escolher novo nome',
+							question: 'O que você deseja fazer?'
+						}
+					},
 					settings: {
 						panel: 'Painel de configurações',
 						labels: {
@@ -102,14 +120,22 @@ class Quicksave {
 					reset: "Reset settings",
 					downloading: 'Downloading...',
 					noFreeName: 'Error: Failed to find a free file name',
-					alreadyExists: 'File ${filename} already exists',
-					alreadyExistsAndGenerateNew: 'Error: File ${filename} already exists. Generating new name for it...',
-					insertFilename: 'Insert file name',
-					cancel: 'Cancel',
-					genRandom: 'Generate random',
-					overwrite: 'Overwrite',
-					chooseNew: 'Choose new name',
-					question: 'Whatcha gonna do?',
+					modals: {
+						generalButtons: {
+							cancel: 'Cancel',
+							save: 'Save'
+						},
+						filenameChoose: {
+							insertFilename: 'Insert file name'
+						},
+						error: {
+							alreadyExists: 'File ${filename} already exists',
+							genRandom: 'Generate random',
+							overwrite: 'Overwrite',
+							chooseNew: 'Choose new name',
+							question: 'Whatcha gonna do?'
+						}
+					},
 					settings: {
 						panel: 'Settings panel',
 						labels: {
@@ -133,7 +159,7 @@ class Quicksave {
 	getAuthor     () { return "Nirewen"             }
 	getName       () { return "Quicksave"           }
 	getDescription() { return this.local.description}
-	getVersion    () { return "0.1.8"               }
+	getVersion    () { return "0.1.9"               }
 	start         () {
 		let self = this;
 		$('#zeresLibraryScript').remove();
@@ -145,7 +171,7 @@ class Quicksave {
 			$('#zeresLibraryScript').on("load", () => self.initialize());
 	}
 	initialize() {
-		BdApi.injectCSS(this.getName(), this.css);
+		BdApi.injectCSS(this.getName(), this.css.modals);
 		PluginUtilities.checkForUpdate(this.getName(), this.getVersion(), "https://raw.githubusercontent.com/nirewen/Quicksave/master/Quicksave.plugin.js");
 		PluginUtilities.showToast(PluginUtilities.formatString(this.local.startMessage, {pluginName: this.getName(), version: this.getVersion()}));
 		this.initialized = true;
@@ -155,7 +181,7 @@ class Quicksave {
 		BdApi.clearCSS(this.getName());
 		this.initialized = false;
 	}
-	load  () {BdApi.injectCSS(`${this.getName()}-inputs`, this.inputCSS)}
+	load  () {BdApi.injectCSS(`${this.getName()}-inputs`, this.css.input)}
 	unload() {BdApi.clearCSS(`${this.getName()}-inputs`)}
 	accessSync(dir) {
 		let fs = require('fs');
@@ -172,31 +198,28 @@ class Quicksave {
 		setTimeout(() => modal.remove(), 100);
 	}
 	
-	openModal(modal, type) {
+	openModal(modal, type, url) {
 		if (document.querySelector('.app-XZYfmp')) 
 			$('.app-XZYfmp').siblings('[class*="theme-"]:not(.popouts)').first().append(modal);
-		else 
-			$('.app').siblings('[class*="theme-"]').first().append(modal);
-		this.bindEvents(modal, type);
+		this.bindEvents(modal, type, url);
 	}
 	
-	bindEvents(modal, type) {
+	bindEvents(modal, type, url) {
 		let self = this;
 		switch (type) {
 			case 'filenameChoose': {
-				let url      = $('.modal-image')[0].childNodes[1].attributes[0].nodeValue,
-					filetype = '.' + url.split('.').slice(-1)[0].split('?')[0];
+				let filetype = '.' + url.split('.').slice(-1)[0].split('?')[0];
 					
 				modal.find('.hint').html(filetype);
 				modal.find('.footer .button').click(e => self.closeModal(modal));
-				modal.find('.footer .button-primary').click(e => self.saveCurrentImage(modal.find('.filename').val()));
+				modal.find('.footer .button-primary').click(e => self.saveCurrentImage(url, modal.find('.filename').val()));
 				modal.find('.filename')
 					.on("input", e => modal.find('.hint').html(modal.find('.filename').val() + filetype))
 					.on("keyup", e => {
 						let code = e.keyCode || e.which;
 						if (code == 13) {
 							e.preventDefault();
-							self.saveCurrentImage(modal.find('.filename').val());
+							self.saveCurrentImage(url, modal.find('.filename').val());
 							self.closeModal(modal);
 						}
 					})
@@ -204,41 +227,116 @@ class Quicksave {
 			}
 			case 'error': {
 				modal.find('button.cancel').click(e => self.closeModal(modal));
-				modal.find('button.overwrite').click(e => self.saveCurrentImage(null, true));
-				modal.find('button.gen-random').click(e => self.saveCurrentImage());
-				modal.find('button.choose-new').click(e => self.openModal($(PluginUtilities.formatString(self.modals.name, {insertFilename: this.local.insertFilename, cancel: this.local.cancel, save: this.local.save})), 'filenameChoose'));
+				modal.find('button.overwrite').click(e => self.saveCurrentImage(url, null, true));
+				modal.find('button.gen-random').click(e => self.saveCurrentImage(url));
+				modal.find('button.choose-new').click(e => self.openModal($(PluginUtilities.formatString(self.modals.name, {
+					insertFilename: this.local.modals.filenameChoose.insertFilename, 
+					cancel: this.local.modals.generalButtons.cancel, 
+					save: this.local.modals.generalButtons.save
+				})), 'filenameChoose', url));
 				modal.find('.button').click(e => self.closeModal(modal));
 			}
 		}
 	}
 
 	observer(e) {
+    if (!e.addedNodes.length || !(e.addedNodes[0] instanceof Element) || !this.initialized) return;
+    
 		let fs   = require('fs'),
-			self = this;
-		if (e.addedNodes.length > 0 && /callout-backdrop|backdrop-2ohBEd/.test(e.addedNodes[0].className)) {
-			let elem = $('.modal-image a');
+        elem = $(e.addedNodes[0]),
+			  self = this;
+    
+		if (elem.hasClass('backdrop-2ohBEd')) {
+			let elem = $('.modal-2LIEKY .downloadLink-wANcd8');
 			if (!elem) return;
 			
 			fs.access(this.settings.directory, fs.W_OK, err => {
-				let button = $('<a id="qs_button" class="download-button"></a>');
+				let button = $('<a id="qs_button" class="downloadLink-wANcd8 size14-1wjlWP weightMedium-13x9Y8"></a>');
 				if (err)
 					button.html(this.local.invalidLocation);
 				else {
 					button.html(this.local.quicksave);
 					$(document).on("keydown.qs", e => {
 						if (e.shiftKey)
-							button.html(`${this.local.quicksave} ${this.local.as}`);
+							button.html(`${this.local.quicksave} ${this.local.as}...`);
 					}).on('keyup.qs', e => button.html(this.local.quicksave));
 					button.click(e => {
+						$(document).off('keydown.qs').off('keyup.qs');
+						button.html(self.local.quicksave);
 						if (e.shiftKey)
-							self.openModal($(PluginUtilities.formatString(self.modals.name, {insertFilename: this.local.insertFilename, cancel: this.local.cancel, save: this.local.save})), 'filenameChoose');
+							self.openModal($(PluginUtilities.formatString(self.modals.name, {
+								insertFilename: this.local.modals.filenameChoose.insertFilename,
+								cancel: this.local.modals.generalButtons.cancel, 
+								save: this.local.modals.generalButtons.save
+							})), 'filenameChoose', $('.modal-2LIEKY .inner-1_1f7b .imageWrapper-38T7d9')[0].childNodes[0].attributes[0].nodeValue);
 						else
-							self.saveCurrentImage();
+							self.saveCurrentImage($('.modal-2LIEKY .inner-1_1f7b .imageWrapper-38T7d9')[0].childNodes[0].attributes[0].nodeValue);
 					});
 				}	
-				elem.after($('<span class="download-button"> | </span>'), button);
+				elem.after($('<span class="downloadLink-wANcd8 size14-1wjlWP weightMedium-13x9Y8"> • </span>'), button);
 			});
 		}
+    
+    if (elem.hasClass('contextMenu-uoJTbz')) {
+      let link = ReactUtilities.getReactProperty(elem[0], "return.memoizedProps.attachment.url"),
+          item = "";
+      
+      if (/(.png|.jpg|.jpeg)$/i.test(link)) {
+          item = $(`<div class="item-1XYaYf qs-item"><span>${this.local.quicksave}</span><div class="hint-3TJykr"></div></div>`);
+          $(document)
+            .on("keydown.qs", e => {
+              if (e.shiftKey)
+                item.find('span').html(`${this.local.quicksave} ${this.local.as}...`);
+            })
+            .on('keyup.qs', e => button.html(this.local.quicksave));
+            
+          item.click(e => {
+              $(document).off('keydown.qs').off('keyup.qs');
+              item.find('span').html(self.local.quicksave);
+              if (e.shiftKey) {
+                $(elem[0]).hide();
+                self.openModal($(PluginUtilities.formatString(self.modals.name, {
+                  insertFilename: this.local.modals.filenameChoose.insertFilename,
+                  cancel: this.local.modals.generalButtons.cancel, 
+                  save: this.local.modals.generalButtons.save
+                })), 'filenameChoose', link);
+              } else
+                self.saveCurrentImage(link);
+            });
+          $(elem[0]).prepend(item);
+      } else {
+        link = ReactUtilities.getReactProperty(elem[0], "return.memoizedProps.src");
+        if (!link) return;
+        link = link.match(/https?\/.*(\.png|\.jpg|\.jpeg)\??/g);
+        if (link) return;
+        link = link[0].replace("http/", "http://").replace("https/", "https://").replace('?', '');
+        
+        if (/(.png|.jpg|.jpeg)$/i.test(link)) {
+          item = $(`<div class="item-1XYaYf qs-item"><span>${this.local.quicksave}</span><div class="hint-3TJykr"></div></div>`);
+          $(document)
+            .on("keydown.qs", e => {
+              if (e.shiftKey)
+                item.find('span').html(`${this.local.quicksave} ${this.local.as}...`);
+            })
+            .on('keyup.qs', e => button.html(this.local.quicksave));
+          item
+            .on("click.qs", () => {
+              $(document).off('keydown.qs').off('keyup.qs');
+              item.find('span').html(self.local.quicksave);
+              if (e.shiftKey) {
+                $(elem[0]).hide();
+                self.openModal($(PluginUtilities.formatString(self.modals.name, {
+                  insertFilename: this.local.modals.filenameChoose.insertFilename,
+                  cancel: this.local.modals.generalButtons.cancel, 
+                  save: this.local.modals.generalButtons.save
+                })), 'filenameChoose', link);
+              } else
+                self.saveCurrentImage(link);
+            });
+          $(elem[0]).prepend(item);
+        }
+      }
+    }
 	}
 	saveSettings() {
 		PluginUtilities.saveSettings(this.getName(), this.settings);
@@ -292,7 +390,7 @@ class Quicksave {
 	addNumber(filename, type, i = 0) {
 		let temp = filename + (i > 0 ? ` (${i})` : '');
 		if (this.accessSync(this.settings.directory + temp + type))
-			return this.addNumber(filename, type, i + 1);
+			return this.addNumber(filename, type, ++i);
 		return temp;
 	}
 
@@ -303,12 +401,11 @@ class Quicksave {
 		return name;
 	}
 
-	saveCurrentImage(filename, overwrite = false) {
+	saveCurrentImage(url, filename, overwrite = false) {
 		let button = $('#qs_button'),
-			fs     = require('fs'),
-			dir    = this.settings.directory,
-			url    = $('.modal-image')[0].childNodes[1].attributes[0].nodeValue,
-			net    = (url.split('//')[0] == 'https:') ? require('https') : require('http');
+			  fs     = require('fs'),
+			  dir    = this.settings.directory,
+			  net    = (url.split('//')[0] == 'https:') ? require('https') : require('http');
 		
 		if (/:large$/.test(url))
 			url = url.replace(/:large$/, '');
@@ -327,13 +424,13 @@ class Quicksave {
 		
 		if (this.accessSync(dir + filename + filetype) && !overwrite && !this.settings.addnum) {
 			return this.openModal($(PluginUtilities.formatString(this.modals.error, {
-				alreadyExists: PluginUtilities.formatString(this.local.alreadyExists, {filename: filename + filetype}),
-				question: this.local.question,
-				cancel: this.local.cancel,
-				chooseNew: this.local.chooseNew,
-				overwrite: this.local.overwrite,
-				genRandom: this.local.genRandom
-			})), 'error');
+				alreadyExists: PluginUtilities.formatString(this.local.modals.error.alreadyExists, {filename: filename + filetype}),
+				question: this.local.modals.error.question,
+				cancel: this.local.modals.generalButtons.cancel,
+				chooseNew: this.local.modals.error.chooseNew,
+				overwrite: this.local.modals.error.overwrite,
+				genRandom: this.local.modals.error.genRandom
+			})), 'error', url);
 		}
 		
 		button.html(this.local.downloading);
@@ -373,7 +470,7 @@ class Quicksave {
 			fnLength: 4,
 			showfn: true,
 			addnum: false
-		}
+		};
 	}
 	get modals() {
 		return {
@@ -386,7 +483,7 @@ class Quicksave {
 									"<span>${insertFilename}:</span>" +
 								"</div>" +
 								"<div class='inner'>" +
-									"<input class='filename' maxlength='37'>" +
+									"<input class='filename' maxlength='50'>" +
 									"<div class='hint'></div>" +
 								"</div>" +
 							"</div>" +
@@ -434,174 +531,174 @@ class Quicksave {
 						'</div>' +
 					'</div>' +
 				'</div>'
-		}
+		};
 	}
 	get css() {
-		return `
-		@keyframes quicksave-modal-wrapper {
-			to { transform: scale(1); opacity: 1; }
-		}
-		@keyframes quicksave-modal-wrapper-closing {
-			to { transform: scale(0.7); opacity: 0; }
-		}
-		@keyframes quicksave-backdrop {
-			to { opacity: 0.85; }
-		}
-		@keyframes quicksave-backdrop-closing {
-			to { opacity: 0; }
-		}
-		#quicksave-modal-wrapper .callout-backdrop {
-			animation: quicksave-backdrop 250ms ease;
-			animation-fill-mode: forwards;
-			opacity: 0;
-			background-color: rgb(0, 0, 0);
-			transform: translateZ(0px);
-		}
+		return {
+			modals: `
+				@keyframes quicksave-modal-wrapper {
+					to { transform: scale(1); opacity: 1; }
+				}
+				@keyframes quicksave-modal-wrapper-closing {
+					to { transform: scale(0.7); opacity: 0; }
+				}
+				@keyframes quicksave-backdrop {
+					to { opacity: 0.85; }
+				}
+				@keyframes quicksave-backdrop-closing {
+					to { opacity: 0; }
+				}
+				#quicksave-modal-wrapper .callout-backdrop {
+					animation: quicksave-backdrop 250ms ease;
+					animation-fill-mode: forwards;
+					opacity: 0;
+					background-color: rgb(0, 0, 0);
+					transform: translateZ(0px);
+				}
 
-		#quicksave-modal-wrapper.closing .callout-backdrop {
-			animation: quicksave-backdrop-closing 100ms linear;
-			animation-fill-mode: forwards;
-			animation-delay: 50ms;
-			opacity: 0.85;
-		}
+				#quicksave-modal-wrapper.closing .callout-backdrop {
+					animation: quicksave-backdrop-closing 100ms linear;
+					animation-fill-mode: forwards;
+					animation-delay: 50ms;
+					opacity: 0.85;
+				}
 
-		#quicksave-modal-wrapper.closing .modal-body,
-		#quicksave-modal-wrapper.closing .container-2hX5wK {
-			animation: quicksave-modal-wrapper-closing 100ms cubic-bezier(0.19, 1, 0.22, 1);
-			animation-fill-mode: forwards;
-			opacity: 1;
-			transform: scale(1);
-		}
-		#quicksave-modal-wrapper .label {
-			font-size: 12px;
-			font-weight: 500;
-			text-transform: uppercase;
-		}
-		#quicksave-modal-wrapper .hint {
-			background-color: transparent;
-			color: #dadddf;
-			left: 16px;
-			line-height: 52px;
-			position: absolute;
-			top: 0;
-		}
-		#quicksave-modal-wrapper .comment {
-			margin: 15px 18px 10px 18px;
-		}
-		#quicksave-modal-wrapper .filename {
-			-webkit-box-flex: 1;
-			background-color: transparent;
-			border: none;
-			color: #fff;
-			flex: 1;
-			line-height: 52px;
-			margin-right: 16px;
-			padding: 0;
-			z-index: 1;
-		}
-		#quicksave-modal-wrapper .filename:focus {
-			outline: none;
-		}
-		#quicksave-modal-wrapper .inner, 
-		#quicksave-modal-wrapper .hint,
-		#quicksave-modal-wrapper .filename {
-			font-family: Whitney,Helvetica Neue,Helvetica,Arial,sans-serif;
-			font-size: 14px;
-			font-weight: 300;
-			letter-spacing: .04em;
-			white-space: pre;
-		}
-		#quicksave-modal-wrapper .inner {
-			-webkit-box-align: center;
-			-webkit-box-direction: normal;
-			-webkit-box-orient: horizontal;
-			align-items: center;
-			border: 1px solid rgba(0,0,0,.2);
-			background-color: rgba(36,39,43,.2);
-			border-radius: 3px;
-			display: flex;
-			flex-direction: row;
-			height: 52px;
-			margin: 13px 0;
-			padding: 0 16px;
-			position: relative;
-		}
-		#quicksave-modal-wrapper .footer {
-			-webkit-box-direction: normal;
-			-webkit-box-orient: horizontal;
-			-webkit-box-pack: end;
-			background-color: #5b6dae;
-			border-radius: 0 0 5px 5px;
-			display: -webkit-box;
-			display: -ms-flexbox;
-			display: flex;
-			flex-direction: row;
-			justify-content: flex-end;
-			padding: 10px;
-		}
-		#quicksave-modal-wrapper .button {
-			margin: 0 3px;
-			background-color: #5b6dae;
-			height: 36px;
-			min-width: 84px;
-			padding: 3px !important;
-		}
-		#quicksave-modal-wrapper .button.red {
-			background-color: #f04747;
-		}
-		#quicksave-modal-wrapper .button-primary {
-			background-color: #fff;
-			color: #5b6dae;
-			transition: opacity .2s ease-in-out;
-		}
-		#quicksave-modal-wrapper .modal-body,
-		#quicksave-modal-wrapper .container-2hX5wK {
-			animation: quicksave-modal-wrapper 250ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-			animation-fill-mode: forwards;
-			transform: scale(0.7);
-			transform-origin: 50% 50%;
-		}
-		#quicksave-modal-wrapper .modal-body {
-			color: #fff;
-			margin: 0;
-			opacity: 0;
-			-webkit-box-direction: normal;
-			-webkit-box-orient: vertical;
-			-webkit-filter: blur(0);
-			-webkit-perspective: 1000;
-			background-color: #7289da;
-			border-radius: 5px;
-			display: -webkit-box;
-			display: -ms-flexbox;
-			display: flex;
-			filter: blur(0);
-			flex-direction: column;
-			width: 520px;
-		}`;
-	}
-	get inputCSS() {
-		return `
-		.quicksave.input {
-			-webkit-box-flex: 1;
-			background-color: transparent;
-			border: none;
-			color: #fff;
-			flex: 1;
-			line-height: 52px;
-			padding: 0;
-			z-index: 1;
-			-webkit-box-align: center;
-			-webkit-box-direction: normal;
-			-webkit-box-orient: horizontal;
-			align-items: center;
-			border: 1px solid rgba(0,0,0,.2);
-			background-color: rgba(0,0,0,0.3);
-			border-radius: 3px;
-			display: flex;
-			flex-direction: row;
-			height: 40px;
-			padding: 0 16px;
-			position: relative;
-		}`;
+				#quicksave-modal-wrapper.closing .modal-body,
+				#quicksave-modal-wrapper.closing .container-2hX5wK {
+					animation: quicksave-modal-wrapper-closing 100ms cubic-bezier(0.19, 1, 0.22, 1);
+					animation-fill-mode: forwards;
+					opacity: 1;
+					transform: scale(1);
+				}
+				#quicksave-modal-wrapper .label {
+					font-size: 12px;
+					font-weight: 500;
+					text-transform: uppercase;
+				}
+				#quicksave-modal-wrapper .hint {
+					background-color: transparent;
+					color: #dadddf;
+					left: 16px;
+					line-height: 52px;
+					position: absolute;
+					top: 0;
+				}
+				#quicksave-modal-wrapper .comment {
+					margin: 15px 18px 10px 18px;
+				}
+				#quicksave-modal-wrapper .filename {
+					-webkit-box-flex: 1;
+					background-color: transparent;
+					border: none;
+					color: #fff;
+					flex: 1;
+					line-height: 52px;
+					margin-right: 16px;
+					padding: 0;
+					z-index: 1;
+				}
+				#quicksave-modal-wrapper .filename:focus {
+					outline: none;
+				}
+				#quicksave-modal-wrapper .inner, 
+				#quicksave-modal-wrapper .hint,
+				#quicksave-modal-wrapper .filename {
+					font-family: Whitney,Helvetica Neue,Helvetica,Arial,sans-serif;
+					font-size: 14px;
+					font-weight: 300;
+					letter-spacing: .04em;
+					white-space: pre;
+				}
+				#quicksave-modal-wrapper .inner {
+					-webkit-box-align: center;
+					-webkit-box-direction: normal;
+					-webkit-box-orient: horizontal;
+					align-items: center;
+					border: 1px solid rgba(0,0,0,.2);
+					background-color: rgba(36,39,43,.2);
+					border-radius: 3px;
+					display: flex;
+					flex-direction: row;
+					height: 52px;
+					margin: 13px 0;
+					padding: 0 16px;
+					position: relative;
+				}
+				#quicksave-modal-wrapper .footer {
+					-webkit-box-direction: normal;
+					-webkit-box-orient: horizontal;
+					-webkit-box-pack: end;
+					background-color: #5b6dae;
+					border-radius: 0 0 5px 5px;
+					display: -webkit-box;
+					display: -ms-flexbox;
+					display: flex;
+					flex-direction: row;
+					justify-content: flex-end;
+					padding: 10px;
+				}
+				#quicksave-modal-wrapper .button {
+					margin: 0 3px;
+					background-color: #5b6dae;
+					height: 36px;
+					min-width: 84px;
+					padding: 3px !important;
+				}
+				#quicksave-modal-wrapper .button.red {
+					background-color: #f04747;
+				}
+				#quicksave-modal-wrapper .button-primary {
+					background-color: #fff;
+					color: #5b6dae;
+					transition: opacity .2s ease-in-out;
+				}
+				#quicksave-modal-wrapper .modal-body,
+				#quicksave-modal-wrapper .container-2hX5wK {
+					animation: quicksave-modal-wrapper 250ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+					animation-fill-mode: forwards;
+					transform: scale(0.7);
+					transform-origin: 50% 50%;
+				}
+				#quicksave-modal-wrapper .modal-body {
+					color: #fff;
+					margin: 0;
+					opacity: 0;
+					-webkit-box-direction: normal;
+					-webkit-box-orient: vertical;
+					-webkit-filter: blur(0);
+					-webkit-perspective: 1000;
+					background-color: #7289da;
+					border-radius: 5px;
+					display: -webkit-box;
+					display: -ms-flexbox;
+					display: flex;
+					filter: blur(0);
+					flex-direction: column;
+					width: 520px;
+				}`,
+			input: `
+				.quicksave.input {
+					-webkit-box-flex: 1;
+					background-color: transparent;
+					border: none;
+					color: #fff;
+					flex: 1;
+					line-height: 52px;
+					padding: 0;
+					z-index: 1;
+					-webkit-box-align: center;
+					-webkit-box-direction: normal;
+					-webkit-box-orient: horizontal;
+					align-items: center;
+					border: 1px solid rgba(0,0,0,.2);
+					background-color: rgba(0,0,0,0.3);
+					border-radius: 3px;
+					display: flex;
+					flex-direction: row;
+					height: 40px;
+					padding: 0 16px;
+					position: relative;
+				}`
+		};
 	}
 }
