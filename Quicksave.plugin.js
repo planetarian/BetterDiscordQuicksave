@@ -373,9 +373,9 @@ class Quicksave {
 			new PluginSettings.Checkbox(this.local.settings.labels.autoAddNum, this.local.settings.help.autoAddNum, this.settings.addnum, checked => {
 				this.settings.addnum = checked;
 			}),
-			$(`<div class='protip inline'>
-				<label class='label'>${this.local.settings.protip.label}</label>
-				<div class='tip'>${this.local.settings.protip.tip}</div>
+			$(`<div class='protip-12obwm inline-XIL6yQ'>
+				<div class='pro-1IhGKk small-3-03j1 size12-1IGJl9 height16-1qXrGy statusGreen-1ADNRt weightBold-2qbcng'>${this.local.settings.protip.label}</div>
+				<div class='tip-1Hs8ce primary-2giqSn'>${this.local.settings.protip.tip}</div>
 			</div>`),
 			$(`<button type="button" class="buttonRedFilledDefault-1TrZ9q buttonFilledDefault-AELjWf buttonDefault-2OLW-v button-2t3of8 buttonFilled-29g7b5 buttonRedFilled-1NjJNj mediumGrow-uovsMu" style='margin: 10px 0; float: right;'>${this.local.reset}</button>`)
 				.click(() => {
