@@ -159,7 +159,7 @@ class Quicksave {
 	getAuthor     () { return "Nirewen"             }
 	getName       () { return "Quicksave"           }
 	getDescription() { return this.local.description}
-	getVersion    () { return "0.1.9"               }
+	getVersion    () { return "0.2.0"               }
 	start         () {
 		let self = this;
 		$('#zeresLibraryScript').remove();
@@ -240,7 +240,7 @@ class Quicksave {
 	}
 
 	observer(e) {
-    if (!e.addedNodes.length || !(e.addedNodes[0] instanceof Element) || !this.initialized) return;
+    if (!e.addedNodes.length || e.addedNodes.length == 0 || !(e.addedNodes[0] instanceof Element) || !this.initialized) return;
     
 		let fs   = require('fs'),
         elem = $(e.addedNodes[0]),
@@ -410,7 +410,7 @@ class Quicksave {
 		if (/:large$/.test(url))
 			url = url.replace(/:large$/, '');
 		
-		if (this.settings.norandom)
+		if (!filename && this.settings.norandom)
 			filename = url.split('/').slice(-1)[0].split('?')[0].split('.')[0];
 		
 		if (!filename && !overwrite && !this.settings.addnum) 
