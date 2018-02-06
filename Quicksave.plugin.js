@@ -106,6 +106,54 @@ class Quicksave {
 						}
 					}
 				};
+			case "it": // Italian
+				return {
+					startMessage: "${pluginName} ${version} avviato.",
+					description: 'Permette di salvare velocemente le immagini con un nome breve casuale',
+					quicksave: "Salva immagine",
+					as: 'come',
+					finished: 'Fatto',
+					filename: "Immagine salvata come ${filename}",
+					saveFail: "Si è verificato un problema durante il salvataggio.",
+					invalidLocation: "Percorso non valido",
+					save: "Salva",
+					reset: "Reimposta opzioni",
+					downloading: 'Download in corso...',
+					noFreeName: 'Errore: Non è stato possibile trovare un nome utilizzabile per il file',
+					modals: {
+						generalButtons: {
+							cancel: 'Annulla',
+							save: 'Salva'
+						},
+						filenameChoose: {
+							insertFilename: 'Inserisci il nome del file'
+						},
+						error: {
+							alreadyExists: 'Il file ${filename} esiste già',
+							genRandom: 'Genera casualmente',
+							overwrite: 'Sovrascrivi',
+							chooseNew: 'Scegli un nuovo nome',
+							question: 'Cosa vuoi fare?'
+						}
+					},
+					settings: {
+						panel: 'Pannello di configurazione',
+						labels: {
+							directory: 'Percorso',
+							original: 'Mantieni il nome originale',
+							filename: 'Mostra il nome del file una volta completato il download',
+							randomLength: 'Lunghezza nome del file casuale'
+						},
+						help: {
+							original: 'Salva il file con il suo nome originale invece di generarne uno casuale',
+							filename: 'Se mostrare il nome del file alla fine oppure no'
+						},
+						protip: {
+							label: 'Suggerimento:',
+							tip: 'I file vengono salvati con un nome base64. Solo 4 caratteri possono avere ~17 milioni di combinazioni differenti (64^4).'
+						}
+					}
+				};
 			default: // English
 				return {
 					startMessage: "${pluginName} ${version} has started.",
