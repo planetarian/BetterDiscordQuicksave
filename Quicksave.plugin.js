@@ -161,7 +161,7 @@ class Quicksave {
     getAuthor     () { return "Nirewen"             }
     getName       () { return "Quicksave"           }
     getDescription() { return this.local.description}
-    getVersion    () { return "0.2.1"               }
+    getVersion    () { return "0.2.2"               }
     start         () {
         let self = this;
         $('#zeresLibraryScript').remove();
@@ -201,7 +201,7 @@ class Quicksave {
     }
     
     openModal(modal, type, url) {
-        $('[class*="app-"').append(modal);
+        $('#app-mount').find('[class*=theme-]').last().append(modal);
         this.bindEvents(modal, type, url);
     }
     
@@ -287,9 +287,9 @@ class Quicksave {
                             item.find('span').html(`${this.local.quicksave} ${this.local.as}...`);
                     })
                     .on('keyup.qs', e => item.html(this.local.quicksave));
-                
                 item
                     .click(e => {
+                        $(document).off('keyup.qs').off('keydown.qs');
                         item.find('span').html(self.local.quicksave);
                         $(elem[0]).hide();
                         if (e.shiftKey) {
@@ -306,12 +306,13 @@ class Quicksave {
         }
         
         if (elem.find('.downloadButton-NPl2PI').length) {
-            let anchor = elem.find('.downloadButton-NPl2PI').parent();
-            let link = ReactUtilities.getReactProperty(anchor[0], 'memoizedProps.href');
+            let anchor = elem.find('.downloadButton-NPl2PI').parent(),
+                link   = ReactUtilities.getReactProperty(anchor[0], 'memoizedProps.href');
             anchor
                 .on('click.qs', e => {
                     e.preventDefault();
                     e.stopPropagation();
+                    tooltip.tooltip.remove();
                     if (e.shiftKey) {
                         self.openModal($(PluginUtilities.formatString(self.modals.name, {
                             insertFilename: this.local.modals.filenameChoose.insertFilename,
@@ -664,6 +665,9 @@ class Quicksave {
                     filter: blur(0);
                     flex-direction: column;
                     width: 520px;
+                }
+                #quicksave-modal-wrapper {
+                    z-index: 1001;
                 }`,
             input: `
                 .quicksave.input {
