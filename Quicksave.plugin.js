@@ -11,12 +11,12 @@ class Quicksave {
             case "es": // Spanish
                 return {
                     startMessage: "${pluginName} ${version} ha empezado",
-                    description: 'Le permite guardar imágenes rápidamente con un nombre corto y aleatorio',
-                    quicksave: "Guardar imagen",
+                    description: 'Le permite guardar archivos rápidamente con un nombre corto y aleatorio',
+                    quicksave: "Guardar archivo",
                     as: 'como',
                     finished: 'Finalizado',
-                    showFn: "Imagen guardada como ${filename}",
-                    saveFail: "Hubo un problema al guardar la imagen.",
+                    showFn: "Archivo guardado como ${filename}",
+                    saveFail: "Hubo un problema al guardar el archivo.",
                     invalidLocation: "Ubicación no válida",
                     save: "Guardar",
                     reset: "Reajustar configuraciones",
@@ -59,12 +59,12 @@ class Quicksave {
             case "pt": // Portuguese
                 return {
                     startMessage: "${pluginName} ${version} iniciado",
-                    description: 'Permite salvar imagens rapidamente com um nome curto e aleatório',
-                    quicksave: "Salvar imagem",
+                    description: 'Permite salvar arquivos rapidamente com um nome curto e aleatório',
+                    quicksave: "Salvar arquivo",
                     as: 'como',
                     finished: 'Finalizado',
-                    filename: "Imagem salva como ${filename}",
-                    saveFail: "Houve um problema ao salvar a imagem",
+                    filename: "Arquivo salvo como ${filename}",
+                    saveFail: "Houve um problema ao salvar o arquivo",
                     invalidLocation: "Local inválido",
                     save: "Salvar",
                     reset: "Redefinir configurações",
@@ -109,12 +109,12 @@ class Quicksave {
             default: // English
                 return {
                     startMessage: "${pluginName} ${version} has started.",
-                    description: 'Lets you save images fast with a short random name',
-                    quicksave: "Save image",
+                    description: 'Lets you save files fast with a short random name',
+                    quicksave: "Save file",
                     as: 'as',
                     finished: 'Finished',
-                    filename: "Image saved as ${filename}",
-                    saveFail: "There was an issue saving the image.",
+                    filename: "File saved as ${filename}",
+                    saveFail: "There was an issue saving the file.",
                     invalidLocation: "Invalid location",
                     save: "Save",
                     reset: "Reset settings",
@@ -201,8 +201,7 @@ class Quicksave {
     }
     
     openModal(modal, type, url) {
-        if (document.querySelector('.app-XZYfmp')) 
-            $('.app-XZYfmp').siblings('[class*="theme-"]:not(.popouts)').first().append(modal);
+        $('[class*="app-"').append(modal);
         this.bindEvents(modal, type, url);
     }
     
@@ -214,14 +213,14 @@ class Quicksave {
                     
                 modal.find('.hint').html(filetype);
                 modal.find('.footer .button').click(e => self.closeModal(modal));
-                modal.find('.footer .button-primary').click(e => self.saveCurrentImage(url, modal.find('.filename').val()));
+                modal.find('.footer .button-primary').click(e => self.saveCurrentFile(url, modal.find('.filename').val()));
                 modal.find('.filename')
                     .on("input", e => modal.find('.hint').html(modal.find('.filename').val() + filetype))
                     .on("keyup", e => {
                         let code = e.keyCode || e.which;
                         if (code == 13) {
                             e.preventDefault();
-                            self.saveCurrentImage(url, modal.find('.filename').val());
+                            self.saveCurrentFile(url, modal.find('.filename').val());
                             self.closeModal(modal);
                         }
                     })
@@ -229,8 +228,8 @@ class Quicksave {
             }
             case 'error': {
                 modal.find('button.cancel').click(e => self.closeModal(modal));
-                modal.find('button.overwrite').click(e => self.saveCurrentImage(url, modal.find('.already_exists .file-name').text(), true));
-                modal.find('button.gen-random').click(e => self.saveCurrentImage(url));
+                modal.find('button.overwrite').click(e => self.saveCurrentFile(url, modal.find('.already_exists .file-name').text(), true));
+                modal.find('button.gen-random').click(e => self.saveCurrentFile(url));
                 modal.find('button.choose-new').click(e => self.openModal($(PluginUtilities.formatString(self.modals.name, {
                     insertFilename: this.local.modals.filenameChoose.insertFilename, 
                     cancel: this.local.modals.generalButtons.cancel, 
@@ -271,7 +270,7 @@ class Quicksave {
                                 save: this.local.modals.generalButtons.save
                             })), 'filenameChoose', $('.modal-2LIEKY .inner-1_1f7b .imageWrapper-38T7d9')[0].childNodes[0].attributes[0].nodeValue);
                         else
-                            self.saveCurrentImage($('.modal-2LIEKY .inner-1_1f7b .imageWrapper-38T7d9')[0].childNodes[0].attributes[0].nodeValue);
+                            self.saveCurrentFile($('.modal-2LIEKY .inner-1_1f7b .imageWrapper-38T7d9')[0].childNodes[0].attributes[0].nodeValue);
                     });
                 }    
                 elem.after($('<span class="downloadLink-wANcd8 size14-1wjlWP weightMedium-13x9Y8"> | </span>'), button);
@@ -279,11 +278,9 @@ class Quicksave {
         }
     
         if (elem.hasClass('contextMenu-uoJTbz')) {
-            let link = ReactUtilities.getReactProperty(elem[0], "return.memoizedProps.attachment.url"),
-                item = "";
-          
-            if (/(.png|.jpg|.jpeg)$/i.test(link)) {
+            let link = ReactUtilities.getReactProperty(elem[0], "return.memoizedProps.attachment.url") || ReactUtilities.getReactProperty(elem[0], "return.memoizedProps.src"),
                 item = $(`<div class="item-1XYaYf qs-item"><span>${this.local.quicksave}</span><div class="hint-3TJykr"></div></div>`);
+            if (link) {
                 $(document)
                     .on("keydown.qs", e => {
                         if (e.shiftKey)
@@ -293,51 +290,37 @@ class Quicksave {
                 
                 item
                     .click(e => {
-                        $(document).off('keydown.qs').off('keyup.qs');
                         item.find('span').html(self.local.quicksave);
+                        $(elem[0]).hide();
                         if (e.shiftKey) {
-                            $(elem[0]).hide();
                             self.openModal($(PluginUtilities.formatString(self.modals.name, {
                                 insertFilename: this.local.modals.filenameChoose.insertFilename,
                                 cancel: this.local.modals.generalButtons.cancel, 
                                 save: this.local.modals.generalButtons.save
                             })), 'filenameChoose', link);
                         } else
-                            self.saveCurrentImage(link);
+                            self.saveCurrentFile(link);
                     });
                 $(elem[0]).prepend(item);
-            } else {
-                link = ReactUtilities.getReactProperty(elem[0], "return.memoizedProps.src");
-                if (!link) return;
-                link = link.match(/https?\/.*(\.png|\.jpg|\.jpeg)\??/g);
-                if (link) return;
-                link = link[0].replace("http/", "http://").replace("https/", "https://").replace('?', '');
-            
-                if (/(.png|.jpg|.jpeg)$/i.test(link)) {
-                    item = $(`<div class="item-1XYaYf qs-item"><span>${this.local.quicksave}</span><div class="hint-3TJykr"></div></div>`);
-                    $(document)
-                        .on("keydown.qs", e => {
-                            if (e.shiftKey)
-                            item.find('span').html(`${this.local.quicksave} ${this.local.as}...`);
-                        })
-                        .on('keyup.qs', e => item.html(this.local.quicksave));
-                    item
-                        .on("click.qs", () => {
-                            $(document).off('keydown.qs').off('keyup.qs');
-                            item.find('span').html(self.local.quicksave);
-                            if (e.shiftKey) {
-                                $(elem[0]).hide();
-                                self.openModal($(PluginUtilities.formatString(self.modals.name, {
-                                    insertFilename: this.local.modals.filenameChoose.insertFilename,
-                                    cancel: this.local.modals.generalButtons.cancel, 
-                                    save: this.local.modals.generalButtons.save
-                                })), 'filenameChoose', link);
-                            } else
-                                self.saveCurrentImage(link);
-                        });
-                    $(elem[0]).prepend(item);
-                }
             }
+        }
+        
+        if (elem.find('.downloadButton-NPl2PI').length) {
+            let anchor = elem.find('.downloadButton-NPl2PI').parent();
+            let link = ReactUtilities.getReactProperty(anchor[0], 'memoizedProps.href');
+            anchor
+                .on('click.qs', e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (e.shiftKey) {
+                        self.openModal($(PluginUtilities.formatString(self.modals.name, {
+                            insertFilename: this.local.modals.filenameChoose.insertFilename,
+                            cancel: this.local.modals.generalButtons.cancel, 
+                            save: this.local.modals.generalButtons.save
+                        })), 'filenameChoose', link);
+                    } else
+                        self.saveCurrentFile(link);
+                });
         }
     }
     saveSettings() {
@@ -403,7 +386,7 @@ class Quicksave {
         return name;
     }
 
-    saveCurrentImage(url, filename, overwrite = false) {
+    saveCurrentFile(url, filename, overwrite = false) {
         let button = $('#qs_button'),
             fs     = require('fs'),
             dir    = this.settings.directory,
