@@ -247,12 +247,12 @@ class Quicksave {
             elem = $(e.addedNodes[0]),
             self = this;
     
-        if (elem.hasClass('backdrop-2ohBEd')) {
-            let elem = $('.modal-2LIEKY .downloadLink-wANcd8');
+        if (elem.hasClass('backdrop-1ocfXc')) {
+            let elem = $('.modal-1UGdnR .downloadLink-2oSgiF');
             if (!elem) return;
             
             fs.access(this.settings.directory, fs.W_OK, err => {
-                let button = $('<a id="qs_button" class="downloadLink-wANcd8 size14-1wjlWP weightMedium-13x9Y8"></a>');
+                let button = $('<a id="qs_button" class="downloadLink-2oSgiF size14-3iUx6q weightMedium-2iZe9B"></a>');
                 if (err)
                     button.html(this.local.invalidLocation);
                 else {
@@ -268,18 +268,18 @@ class Quicksave {
                                 insertFilename: this.local.modals.filenameChoose.insertFilename,
                                 cancel: this.local.modals.generalButtons.cancel, 
                                 save: this.local.modals.generalButtons.save
-                            })), 'filenameChoose', $('.modal-2LIEKY .inner-1_1f7b .imageWrapper-38T7d9')[0].childNodes[0].attributes[0].nodeValue);
+                            })), 'filenameChoose', $('.modal-1UGdnR .inner-1JeGVc .imageWrapper-2p5ogY')[0].childNodes[0].attributes[0].nodeValue);
                         else
-                            self.saveCurrentFile($('.modal-2LIEKY .inner-1_1f7b .imageWrapper-38T7d9')[0].childNodes[0].attributes[0].nodeValue);
+                            self.saveCurrentFile($('.modal-1UGdnR .inner-1JeGVc .imageWrapper-2p5ogY')[0].childNodes[0].attributes[0].nodeValue);
                     });
                 }    
-                elem.after($('<span class="downloadLink-wANcd8 size14-1wjlWP weightMedium-13x9Y8"> | </span>'), button);
+                elem.after($('<span class="downloadLink-2oSgiF size14-3iUx6q weightMedium-2iZe9B"> | </span>'), button);
             });
         }
     
-        if (elem.hasClass('contextMenu-uoJTbz')) {
+        if (elem.hasClass('contextMenu-HLZMGh')) {
             let link = ReactUtilities.getReactProperty(elem[0], "return.memoizedProps.attachment.url") || ReactUtilities.getReactProperty(elem[0], "return.memoizedProps.src"),
-                item = $(`<div class="item-1XYaYf qs-item"><span>${this.local.quicksave}</span><div class="hint-3TJykr"></div></div>`);
+                item = $(`<div class="item-1Yvehc qs-item"><span>${this.local.quicksave}</span><div class="hint-22uc-R"></div></div>`);
             if (link) {
                 $(document)
                     .on("keydown.qs", e => {
@@ -305,8 +305,8 @@ class Quicksave {
             }
         }
         
-        if (elem.find('.downloadButton-NPl2PI').length) {
-            let anchor = elem.find('.downloadButton-NPl2PI').parent(),
+        if (elem.find('.downloadButton-23tKQp').length) {
+            let anchor = elem.find('.downloadButton-23tKQp').parent(),
                 link   = ReactUtilities.getReactProperty(anchor[0], 'memoizedProps.href');
             anchor
                 .on('click.qs', e => {
@@ -461,9 +461,9 @@ class Quicksave {
     get modals() {
         return {
             name: "<div id='quicksave-modal-wrapper'>" +
-                    "<div class='callout-backdrop backdrop-2ohBEd'></div>" +
-                    "<div class='modal-2LIEKY' style='opacity: 1; transform: scale(1) translateZ(0px);'>" +
-                        "<div class='modal-body inner-1_1f7b'>" +
+                    "<div class='callout-backdrop backdrop-1ocfXc'></div>" +
+                    "<div class='modal-1UGdnR' style='opacity: 1; transform: scale(1) translateZ(0px);'>" +
+                        "<div class='modal-body inner-1JeGVc'>" +
                             "<div class='comment'>" +
                                 "<div class='label'>" +
                                     "<span>${insertFilename}:</span>" +
@@ -485,9 +485,9 @@ class Quicksave {
                     "</div>" +
                 "</div>",
             error: '<div id="quicksave-modal-wrapper">' +
-                    '<div class="callout-backdrop backdrop-2ohBEd"></div>' +
-                    '<div class="modal-2LIEKY" style="opacity: 1; transform: scale(1) translateZ(0px);">' +
-                        '<div class="inner-1_1f7b">' +
+                    '<div class="callout-backdrop backdrop-1ocfXc"></div>' +
+                    '<div class="modal-1UGdnR" style="opacity: 1; transform: scale(1) translateZ(0px);">' +
+                        '<div class="inner-1JeGVc">' +
                             '<form class="modal-3HOjGZ container-2hX5wK">' +
                                 '<div class="flex-lFgbSz flex-3B1Tl4 horizontal-2BEEBe horizontal-2VE-Fw flex-3B1Tl4 directionRow-yNbSvJ justifyStart-2yIZo0 alignCenter-3VxkQP noWrap-v6g9vO header-3sp3cE title" style="flex: 0 0 auto;">' +
                                     '<h4 class="h4-2IXpeI title-1pmpPr size16-3IvaX_ height20-165WbF weightSemiBold-T8sxWH defaultColor-v22dK1 header-JzU4_V already_exists">' +
@@ -550,7 +550,7 @@ class Quicksave {
                 }
 
                 #quicksave-modal-wrapper.closing .modal-body,
-                #quicksave-modal-wrapper.closing .container-2hX5wK {
+                #quicksave-modal-wrapper.closing .container-SaXBYZ {
                     animation: quicksave-modal-wrapper-closing 100ms cubic-bezier(0.19, 1, 0.22, 1);
                     animation-fill-mode: forwards;
                     opacity: 1;
@@ -643,7 +643,7 @@ class Quicksave {
                     transition: opacity .2s ease-in-out;
                 }
                 #quicksave-modal-wrapper .modal-body,
-                #quicksave-modal-wrapper .container-2hX5wK {
+                #quicksave-modal-wrapper .container-SaXBYZ {
                     animation: quicksave-modal-wrapper 250ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
                     animation-fill-mode: forwards;
                     transform: scale(0.7);
