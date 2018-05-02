@@ -305,8 +305,8 @@ class Quicksave {
             }
         }
         
-        if (elem.find('.downloadButton-NPl2PI').length) {
-            let anchor = elem.find('.downloadButton-NPl2PI').parent(),
+        if (elem.find('.downloadButton-23tKQp').length) {
+            let anchor = elem.find('.downloadButton-23tKQp').parent(),
                 link   = ReactUtilities.getReactProperty(anchor[0], 'memoizedProps.href');
             anchor
                 .on('click.qs', e => {
@@ -550,7 +550,7 @@ class Quicksave {
                 }
 
                 #quicksave-modal-wrapper.closing .modal-body,
-                #quicksave-modal-wrapper.closing .container-2hX5wK {
+                #quicksave-modal-wrapper.closing .container-SaXBYZ {
                     animation: quicksave-modal-wrapper-closing 100ms cubic-bezier(0.19, 1, 0.22, 1);
                     animation-fill-mode: forwards;
                     opacity: 1;
@@ -643,7 +643,7 @@ class Quicksave {
                     transition: opacity .2s ease-in-out;
                 }
                 #quicksave-modal-wrapper .modal-body,
-                #quicksave-modal-wrapper .container-2hX5wK {
+                #quicksave-modal-wrapper .container-SaXBYZ {
                     animation: quicksave-modal-wrapper 250ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
                     animation-fill-mode: forwards;
                     transform: scale(0.7);
