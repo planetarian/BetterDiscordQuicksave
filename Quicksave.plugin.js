@@ -359,11 +359,11 @@ class Quicksave {
             new PluginSettings.Checkbox(this.local.settings.labels.autoAddNum, this.local.settings.help.autoAddNum, this.settings.addnum, checked => {
                 this.settings.addnum = checked;
             }),
-            $(`<div class='protip-12obwm inline-XIL6yQ'>
-                <div class='pro-1IhGKk small-3-03j1 size12-1IGJl9 height16-1qXrGy statusGreen-1ADNRt weightBold-2qbcng'>${this.local.settings.protip.label}</div>
-                <div class='tip-1Hs8ce primary-2giqSn'>${this.local.settings.protip.tip}</div>
+            $(`<div class='protip-12obwm inline-136HKr'>
+                <div class='pro-1T8RK7 small-29zrCQ size12-3R0845 height16-2Lv3qA statusGreen-pvYWjA weightBold-2yjlgw'>${this.local.settings.protip.label}</div>
+                <div class='tip-2ab612 primary-jw0I4K'>${this.local.settings.protip.tip}</div>
             </div>`),
-            $(`<button type="button" class="button-2t3of8 lookOutlined-1c5nhl colorRed-3HTNPV sizeMedium-2VGNaF grow-25YQ8u" style='margin: 10px 0; float: right;'><div class="contents-4L4hQM">${this.local.reset}</div></button>`)
+            $(`<button type="button" class="button-38aScr lookOutlined-3sRXeN colorRed-1TFJan sizeMedium-1AC_Sl grow-q77ONN" style='margin: 10px 0; float: right;'><div class="contents-18-Yxp">${this.local.reset}</div></button>`)
                 .click(() => {
                     this.settings = this.defaultSettings;
                     this.saveSettings();
@@ -488,29 +488,29 @@ class Quicksave {
                     '<div class="callout-backdrop backdrop-1ocfXc"></div>' +
                     '<div class="modal-1UGdnR" style="opacity: 1; transform: scale(1) translateZ(0px);">' +
                         '<div class="inner-1JeGVc">' +
-                            '<form class="modal-3HOjGZ container-2hX5wK">' +
-                                '<div class="flex-lFgbSz flex-3B1Tl4 horizontal-2BEEBe horizontal-2VE-Fw flex-3B1Tl4 directionRow-yNbSvJ justifyStart-2yIZo0 alignCenter-3VxkQP noWrap-v6g9vO header-3sp3cE title" style="flex: 0 0 auto;">' +
-                                    '<h4 class="h4-2IXpeI title-1pmpPr size16-3IvaX_ height20-165WbF weightSemiBold-T8sxWH defaultColor-v22dK1 header-JzU4_V already_exists">' +
+                            '<form class="modal-3HD5ck container-SaXBYZ">' +
+                                '<div class="flex-1xMQg5 flex-1O1GKY horizontal-1ae9ci horizontal-2EEEnY flex-1O1GKY directionRow-3v3tfG justifyStart-2NDFzi alignCenter-1dQNNs noWrap-3jynv6 header-1R_AjF title" style="flex: 0 0 auto;">' +
+                                    '<h4 class="h4-AQvcAz title-3sZWYQ size16-14cGz5 height20-mO2eIN weightSemiBold-NJexzi defaultColor-1_ajX0 header-3OkTu9 already_exists">' +
                                         '${alreadyExists}</h4>' +
                                 '</div>' +
-                                '<div class="scrollerWrap-2uBjct content-1Cut5s scrollerThemed-19vinI themeGhostHairline-2H8SiW">' +
-                                    '<div class="scroller-fzNley inner-tqJwAU content-1a0qkZ">' +
-                                        '<div class="spacing-CsDO_x marginBottom20-2Ifj-2 medium-2KnC-N size16-3IvaX_ height20-165WbF primary-2giqSn">' +
+                                '<div class="scrollerWrap-2lJEkd content-2BXhLs scrollerThemed-2oenus themeGhostHairline-DBD-2d">' +
+                                    '<div class="scroller-2FKFPG inner-3wn6Q5 content-KhOrDM">' +
+                                        '<div class="spacing-2P-ODW marginBottom20-32qID7 medium-zmzTW- size16-14cGz5 height20-mO2eIN primary-jw0I4K">' +
                                             '${question}</div>' +
                                     '</div>' +
                                 '</div>' +
-                                '<div class="flex-lFgbSz flex-3B1Tl4 horizontalReverse-2LanvO horizontalReverse-k5PqxT flex-3B1Tl4 directionRowReverse-2eZTxP justifyStart-2yIZo0 alignStretch-1hwxMa noWrap-v6g9vO footer-1PYmcw" style="flex: 0 0 auto;">' +
+                                '<div class="flex-1xMQg5 flex-1O1GKY horizontalReverse-2eTKWD horizontalReverse-3tRjY7 flex-1O1GKY directionRowReverse-m8IjIq justifyStart-2NDFzi alignStretch-DpGPf3 noWrap-3jynv6 footer-2yfCgX" style="flex: 0 0 auto;">' +
                                     '<button type="button" class="button choose-new">' +
-                                        '<div class="contentsDefault-nt2Ym5 contents-4L4hQM contentsFilled-3M8HCx contents-4L4hQM">${chooseNew}</div>' +
+                                        '<div class="contentsDefault-nt2Ym5 contents-18-Yxp contentsFilled-3M8HCx contents-18-Yxp">${chooseNew}</div>' +
                                     '</button>' +
                                     '<button type="button" class="button gen-random">' +
-                                        '<div class="contentsDefault-nt2Ym5 contents-4L4hQM contentsFilled-3M8HCx contents-4L4hQM">${genRandom}</div>' +
+                                        '<div class="contentsDefault-nt2Ym5 contents-18-Yxp contentsFilled-3M8HCx contents-18-Yxp">${genRandom}</div>' +
                                     '</button>' +
                                     '<button type="button" class="button red overwrite">' +
-                                        '<div class="contentsDefault-nt2Ym5 contents-4L4hQM contentsFilled-3M8HCx contents-4L4hQM">${overwrite}</div>' +
+                                        '<div class="contentsDefault-nt2Ym5 contents-18-Yxp contentsFilled-3M8HCx contents-18-Yxp">${overwrite}</div>' +
                                     '</button>' +
                                     '<button type="button" class="button cancel">' +
-                                        '<div class="contents-4L4hQM">${cancel}</div>' +
+                                        '<div class="contents-18-Yxp">${cancel}</div>' +
                                     '</button>' +
                                 '</div>' +
                             '</form>' +
