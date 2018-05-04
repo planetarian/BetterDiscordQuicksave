@@ -35,7 +35,8 @@ class Quicksave {
                             genRandom: 'Generar aleatorio',
                             overwrite: 'Sustituir',
                             chooseNew: 'Elegir nuevo nombre',
-                            question: '¿Qué vas a hacer?'
+                            question: '¿Qué vas a hacer?',
+                            invalidUrl: 'URL no válida'
                         }
                     },
                     settings: {
@@ -83,7 +84,8 @@ class Quicksave {
                             genRandom: 'Gerar aleatório',
                             overwrite: 'Substituir',
                             chooseNew: 'Escolher novo nome',
-                            question: 'O que você deseja fazer?'
+                            question: 'O que você deseja fazer?',
+                            invalidUrl: 'URL inválido'
                         }
                     },
                     settings: {
@@ -133,7 +135,8 @@ class Quicksave {
                             genRandom: 'Generate random',
                             overwrite: 'Overwrite',
                             chooseNew: 'Choose new name',
-                            question: 'What will you do?'
+                            question: 'What will you do?',
+                            invalidUrl: 'Invalid URL'
                         }
                     },
                     settings: {
@@ -161,7 +164,7 @@ class Quicksave {
     getAuthor     () { return "Nirewen"             }
     getName       () { return "Quicksave"           }
     getDescription() { return this.local.description}
-    getVersion    () { return "0.2.3"               }
+    getVersion    () { return "0.2.4"               }
     start         () {
         let self = this;
         $('#zeresLibraryScript').remove();
@@ -263,14 +266,15 @@ class Quicksave {
                     }).on('keyup.qs', e => button.html(this.local.quicksave));
                     button.click(e => {
                         button.html(self.local.quicksave);
+                        let filePath = $('.modal-1UGdnR .inner-1JeGVc .imageWrapper-2p5ogY img')[0].attributes['src'].nodeValue;
                         if (e.shiftKey)
                             self.openModal($(PluginUtilities.formatString(self.modals.name, {
                                 insertFilename: this.local.modals.filenameChoose.insertFilename,
                                 cancel: this.local.modals.generalButtons.cancel, 
                                 save: this.local.modals.generalButtons.save
-                            })), 'filenameChoose', $('.modal-1UGdnR .inner-1JeGVc .imageWrapper-2p5ogY')[0].childNodes[0].attributes[0].nodeValue);
+                            })), 'filenameChoose', filePath);
                         else
-                            self.saveCurrentFile($('.modal-1UGdnR .inner-1JeGVc .imageWrapper-2p5ogY')[0].childNodes[0].attributes[0].nodeValue);
+                            self.saveCurrentFile(filePath);
                     });
                 }    
                 elem.after($('<span class="downloadLink-2oSgiF size14-3iUx6q weightMedium-2iZe9B"> | </span>'), button);
@@ -388,6 +392,11 @@ class Quicksave {
     }
 
     saveCurrentFile(url, filename, overwrite = false) {
+        if (url == '') {
+            PluginUtilities.showToast(this.local.modals.error.invalidUrl, {type: 'error'});
+            return;
+        }
+
         let button = $('#qs_button'),
             fs     = require('fs'),
             dir    = this.settings.directory,
