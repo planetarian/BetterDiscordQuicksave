@@ -44,11 +44,13 @@ class Quicksave {
                         labels: {
                             directory: 'Directorio',
                             original: 'Mantener el nombre original',
+                            randomizeUnknown: 'Reemplazar nombres de archivo desconocidos',
                             filename: 'Mostrar el nombre del archivo al finalzar',
                             randomLength: 'Tamaño del nombre al azar'
                         },
                         help: {
                             original: 'Guardar archivos con el nombre original en lugar de un aleatorio',
+                            randomizeUnknown: 'Al guardar los nombres de archivos originales, aleatorizar si el nombre de archivo es "unknown".',
                             filename: 'Si mostrar el nombre del archivo al finalizar o no'
                         },
                         protip: {
@@ -93,12 +95,14 @@ class Quicksave {
                         labels: {
                             directory: 'Diretório',
                             original: 'Manter o nome original',
+                            randomizeUnknown: 'Substituir nomes de arquivo desconhecidos',
                             filename: 'Mostrar nome do arquivo ao terminar de baixar',
                             randomLength: 'Tamanho do nome aleatório',
                             autoAddNum: 'Adicionar (n) ao final dos arquivos automaticamente'
                         },
                         help: {
                             original: 'Salvar arquivos com o nome original em vez de um aleatório',
+                            randomizeUnknown: 'Ao manter os nomes de arquivos originais, Randomize se o nome do arquivo for "unknown".',
                             filename: 'Mostrar o nome do arquivo ao finalizar ou não',
                             autoAddNum: 'Ao salvar um arquivo com um nome já existente, adicionar (n) ao final do nome'
                         },
@@ -144,12 +148,14 @@ class Quicksave {
                         labels: {
                             directory: 'Directory',
                             original: 'Keep original name',
+                            randomizeUnknown: 'Replace unknown filenames',
                             filename: 'Show file name when finished downloading',
                             randomLength: 'Random file name length',
                             autoAddNum: 'Add (n) at the end of the file names automatically'
                         },
                         help: {
                             original: 'Save files with original file name instead of new random one',
+                            randomizeUnknown: 'When keeping original file names, randomize if the file name is "unknown".',
                             filename: 'Whether to show file name on ending or not',
                             autoAddNum: 'When saving a file with the same name of another, add (n) to the end of the file name.'
                         },
@@ -164,7 +170,7 @@ class Quicksave {
     getAuthor     () { return "Nirewen"             }
     getName       () { return "Quicksave"           }
     getDescription() { return this.local.description}
-    getVersion    () { return "0.2.4"               }
+    getVersion    () { return "0.2.5"               }
     start         () {
         let self = this;
         $('#zeresLibraryScript').remove();
@@ -350,13 +356,16 @@ class Quicksave {
             }, {
                 width: '400px',
                 class: 'quicksave input'
-            }), 
+            }),
             new PluginSettings.Checkbox(this.local.settings.labels.original, this.local.settings.help.original, this.settings.norandom, checked => {
                 this.settings.norandom = checked;
-            }), 
+            }),
+            new PluginSettings.Checkbox(this.local.settings.labels.randomizeUnknown, this.local.settings.help.randomizeUnknown, this.settings.randomizeUnknown, checked => {
+                this.settings.randomizeUnknown = checked;
+            }),
             new PluginSettings.Checkbox(this.local.settings.labels.filename, this.local.settings.help.filename, this.settings.showfn, checked => {
                 this.settings.showfn = checked;
-            }), 
+            }),
             new PluginSettings.SettingField(this.local.settings.labels.randomLength, '', {type: 'number', value: `${this.settings.fnLength}`, class: 'quicksave input', min: '1'}, number => {
                 this.settings.fnLength = number;
             }),
@@ -408,7 +417,7 @@ class Quicksave {
         if (!filename && this.settings.norandom)
             filename = url.split('/').slice(-1)[0].split('?')[0].split('.')[0];
         
-        if (!filename && !overwrite && !this.settings.addnum) 
+        if ((!filename && !overwrite && !this.settings.addnum) || (this.settings.randomizeUnknown && filename == 'unknown'))
             filename = this.randomFilename64(this.settings.fnLength);
 
         let filetype = '.' + url.split('.').slice(-1)[0].split('?')[0],
@@ -462,6 +471,7 @@ class Quicksave {
         return {
             directory: 'none',
             norandom: false,
+            randomizeUnknown: true,
             fnLength: 4,
             showfn: true,
             addnum: false
