@@ -399,7 +399,7 @@ class Quicksave {
             name += 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-'[(Math.random() * 64 | 0)];
         return name;
     }
-
+    
     saveCurrentFile(url, filename, overwrite = false) {
         if (url == '') {
             PluginUtilities.showToast(this.local.modals.error.invalidUrl, {type: 'error'});
@@ -413,14 +413,17 @@ class Quicksave {
         
         if (/:large$/.test(url))
             url = url.replace(/:large$/, '');
-        
+
+        // Get the last instance of something that looks like a valid filename
+        let fullFilename = /[^?=\/\\]+\.\w{3,4}(?!.*\.)/.exec(url)[0];
+
         if (!filename && this.settings.norandom)
-            filename = url.split('/').slice(-1)[0].split('?')[0].split('.')[0];
+            filename = fullFilename.substring(0,fullFilename.lastIndexOf('.'));
         
         if ((!filename && !overwrite && !this.settings.addnum) || (this.settings.randomizeUnknown && filename == 'unknown'))
             filename = this.randomFilename64(this.settings.fnLength);
 
-        let filetype = '.' + url.split('.').slice(-1)[0].split('?')[0],
+        let filetype = '.' + fullFilename.split('.').slice(-1)[0],
             tries    = 50;
         
         if (this.settings.addnum)
