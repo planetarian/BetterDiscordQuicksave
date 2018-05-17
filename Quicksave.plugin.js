@@ -272,7 +272,7 @@ class Quicksave {
                     }).on('keyup.qs', e => button.html(this.local.quicksave));
                     button.click(e => {
                         button.html(self.local.quicksave);
-                        let filePath = $('.modal-1UGdnR .inner-1JeGVc .imageWrapper-2p5ogY img')[0].attributes['src'].nodeValue;
+                        let filePath = $('.modal-1UGdnR .inner-1JeGVc').find('a').filter('[href^="http"]')[0].attributes['href'].nodeValue;
                         if (e.shiftKey)
                             self.openModal($(PluginUtilities.formatString(self.modals.name, {
                                 insertFilename: this.local.modals.filenameChoose.insertFilename,
