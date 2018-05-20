@@ -238,7 +238,7 @@ class Quicksave {
             case 'error': {
                 modal.find('button.cancel').click(e => self.closeModal(modal));
                 modal.find('button.overwrite').click(e => self.saveCurrentFile(url, modal.find('.already_exists .file-name').text(), true));
-                modal.find('button.gen-random').click(e => self.saveCurrentFile(url));
+                modal.find('button.gen-random').click(e => self.saveCurrentFile(url, this.randomFilename64(this.settings.fnLength)));
                 modal.find('button.choose-new').click(e => self.openModal($(PluginUtilities.formatString(self.modals.name, {
                     insertFilename: this.local.modals.filenameChoose.insertFilename, 
                     cancel: this.local.modals.generalButtons.cancel, 
