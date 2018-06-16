@@ -170,7 +170,7 @@ class Quicksave {
     getAuthor     () { return "Nirewen"             }
     getName       () { return "Quicksave"           }
     getDescription() { return this.local.description}
-    getVersion    () { return "0.2.5"               }
+    getVersion    () { return "0.2.6"               }
     start         () {
         let self = this;
         $('#zeresLibraryScript').remove();
@@ -257,11 +257,11 @@ class Quicksave {
             self = this;
     
         if (elem.hasClass('backdrop-1ocfXc')) {
-            let elem = $('.modal-1UGdnR .downloadLink-2oSgiF');
+            let elem = $('.modal-1UGdnR .downloadLink-1ywL9o');
             if (!elem) return;
             
             fs.access(this.settings.directory, fs.W_OK, err => {
-                let button = $('<a id="qs_button" class="downloadLink-2oSgiF size14-3iUx6q weightMedium-2iZe9B"></a>');
+                let button = $('<a id="qs_button" class="anchor-3Z-8Bb downloadLink-1ywL9o size14-3iUx6q weightMedium-2iZe9B"></a>');
                 if (err)
                     button.html(this.local.invalidLocation);
                 else {
@@ -283,7 +283,7 @@ class Quicksave {
                             self.saveCurrentFile(filePath);
                     });
                 }    
-                elem.after($('<span class="downloadLink-2oSgiF size14-3iUx6q weightMedium-2iZe9B"> | </span>'), button);
+                elem.after(button);
             });
         }
     
