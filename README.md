@@ -21,3 +21,4 @@ In order to install, follow the steps of a regular plugin installation:
  - :portugal: **Portuguese**
  - :gb: **English**
  - :es: **Spanish**
+ - :tr: **Turkish**
