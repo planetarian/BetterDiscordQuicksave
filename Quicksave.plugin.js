@@ -5,7 +5,7 @@
 class Quicksave {
     get local() {
         let lang = navigator.language;
-        if (document.documentElement.getAttribute('lang')) 
+        if (document.documentElement.getAttribute('lang'))
             lang = document.documentElement.getAttribute('lang').split('-')[0];
         switch (lang) {
             case "es": // Spanish
@@ -112,6 +112,59 @@ class Quicksave {
                         }
                     }
                 };
+                case "tr": // Turkish
+                    return {
+                        startMessage: "${pluginName} ${version} başladı.",
+                        description: 'Dosyaları kısa bir rastgele adla hızlıca kaydetmenizi sağlar',
+                        quicksave: "Dosyayı kaydet",
+                        as: 'olarak',
+                        finished: 'Tamamlandı',
+                        filename: "Dosya ${filename} olarak kaydedildi.",
+                        saveFail: "Dosya kaydedilirken bir sorun oluştu.",
+                        invalidLocation: "Geçersiz konum",
+                        save: "Kaydet",
+                        reset: "Ayarları sıfırla",
+                        downloading: 'İndiriliyor...',
+                        noFreeName: 'Hata: Failed to find a free file name',
+                        modals: {
+                            generalButtons: {
+                                cancel: 'İptal',
+                                save: 'Kaydet'
+                            },
+                            filenameChoose: {
+                                insertFilename: 'Dosya adını ekle'
+                            },
+                            error: {
+                                alreadyExists: 'Dosya <span class="file-name">${filename}</span>${filetype} zaten var',
+                                genRandom: 'Rastgele oluştur',
+                                overwrite: 'Üzerine Yaz (Overwrite)',
+                                chooseNew: 'Yeni isim seç',
+                                question: 'Ne yapacaksın??',
+                                invalidUrl: 'Geçersiz URL'
+                            }
+                        },
+                        settings: {
+                            panel: 'Ayar paneli',
+                            labels: {
+                                directory: 'Konum',
+                                original: 'Orijinal ismi koru',
+                                randomizeUnknown: 'Bilinmeyen dosya isimlerini değiştir',
+                                filename: 'İndirme işlemi bittiğinde dosya adını göster',
+                                randomLength: 'Rastgele dosya adı uzunluğu',
+                                autoAddNum: 'Dosya adlarının sonuna otomatik olarak (n) ekle'
+                            },
+                            help: {
+                                original: 'Dosyaları yeni rastgele biri yerine orijinal dosya adıyla kaydedin',
+                                randomizeUnknown: 'Orijinal dosya isimlerini saklarken, dosya adı "unknown" ise rastgele hale getirin.',
+                                filename: 'İndirmenin sonunda dosya adının gösterilip gösterilmeyeceği',
+                                autoAddNum: 'Bir dosyayı aynı ada sahip bir dosyaya kaydederken, dosya adının sonuna (n) ekleyin.'
+                            },
+                            protip: {
+                                label: 'Protip:',
+                                tip: 'Kayıtlı dosyalar rasgetle bir base64 adı alır. Sadece 4 karakter, ~17 milyon farklı dosya adına izin verir (64 ^ 4).'
+                            }
+                        }
+                    };
             default: // English
                 return {
                     startMessage: "${pluginName} ${version} has started.",
@@ -175,10 +228,10 @@ class Quicksave {
         let self = this;
         $('#zeresLibraryScript').remove();
         $('head').append($("<script type='text/javascript' id='zeresLibraryScript' src='https://rauenzi.github.io/BetterDiscordAddons/Plugins/PluginLibrary.js'>"));
-        
-        if (typeof window.ZeresLibrary !== "undefined") 
+
+        if (typeof window.ZeresLibrary !== "undefined")
             this.initialize();
-        else 
+        else
             $('#zeresLibraryScript').on("load", () => self.initialize());
     }
     initialize() {
@@ -203,23 +256,23 @@ class Quicksave {
             return false;
         }
     }
-    
+
     closeModal(modal) {
         modal.addClass('closing');
         setTimeout(() => modal.remove(), 100);
     }
-    
+
     openModal(modal, type, url) {
         $('#app-mount').find('[class*=theme-]').last().append(modal);
         this.bindEvents(modal, type, url);
     }
-    
+
     bindEvents(modal, type, url) {
         let self = this;
         switch (type) {
             case 'filenameChoose': {
                 let filetype = '.' + url.split('.').slice(-1)[0].split('?')[0];
-                    
+
                 modal.find('.hint').html(filetype);
                 modal.find('.footer .button').click(e => self.closeModal(modal));
                 modal.find('.footer .button-primary').click(e => self.saveCurrentFile(url, modal.find('.filename').val()));
@@ -240,8 +293,8 @@ class Quicksave {
                 modal.find('button.overwrite').click(e => self.saveCurrentFile(url, modal.find('.already_exists .file-name').text(), true));
                 modal.find('button.gen-random').click(e => self.saveCurrentFile(url, this.randomFilename64(this.settings.fnLength)));
                 modal.find('button.choose-new').click(e => self.openModal($(PluginUtilities.formatString(self.modals.name, {
-                    insertFilename: this.local.modals.filenameChoose.insertFilename, 
-                    cancel: this.local.modals.generalButtons.cancel, 
+                    insertFilename: this.local.modals.filenameChoose.insertFilename,
+                    cancel: this.local.modals.generalButtons.cancel,
                     save: this.local.modals.generalButtons.save
                 })), 'filenameChoose', url));
                 modal.find('.button').click(e => self.closeModal(modal));
@@ -251,15 +304,15 @@ class Quicksave {
 
     observer(e) {
         if (!e.addedNodes.length || e.addedNodes.length == 0 || !(e.addedNodes[0] instanceof Element) || !this.initialized) return;
-    
+
         let fs   = require('fs'),
             elem = $(e.addedNodes[0]),
             self = this;
-    
+
         if (elem.hasClass('backdrop-1ocfXc')) {
             let elem = $('.modal-1UGdnR .downloadLink-1ywL9o');
             if (!elem) return;
-            
+
             fs.access(this.settings.directory, fs.W_OK, err => {
                 let button = $('<a id="qs_button" class="anchor-3Z-8Bb downloadLink-1ywL9o size14-3iUx6q weightMedium-2iZe9B"></a>');
                 if (err)
@@ -276,17 +329,17 @@ class Quicksave {
                         if (e.shiftKey)
                             self.openModal($(PluginUtilities.formatString(self.modals.name, {
                                 insertFilename: this.local.modals.filenameChoose.insertFilename,
-                                cancel: this.local.modals.generalButtons.cancel, 
+                                cancel: this.local.modals.generalButtons.cancel,
                                 save: this.local.modals.generalButtons.save
                             })), 'filenameChoose', filePath);
                         else
                             self.saveCurrentFile(filePath);
                     });
-                }    
+                }
                 elem.after(button);
             });
         }
-    
+
         if (elem.hasClass('contextMenu-HLZMGh')) {
             let link = ReactUtilities.getReactProperty(elem[0], "return.memoizedProps.attachment.url") || ReactUtilities.getReactProperty(elem[0], "return.memoizedProps.src"),
                 item = $(`<div class="item-1Yvehc qs-item"><span>${this.local.quicksave}</span><div class="hint-22uc-R"></div></div>`);
@@ -305,7 +358,7 @@ class Quicksave {
                         if (e.shiftKey) {
                             self.openModal($(PluginUtilities.formatString(self.modals.name, {
                                 insertFilename: this.local.modals.filenameChoose.insertFilename,
-                                cancel: this.local.modals.generalButtons.cancel, 
+                                cancel: this.local.modals.generalButtons.cancel,
                                 save: this.local.modals.generalButtons.save
                             })), 'filenameChoose', link);
                         } else
@@ -314,7 +367,7 @@ class Quicksave {
                 $(elem[0]).prepend(item);
             }
         }
-        
+
         if (elem.find('.downloadButton-23tKQp').length) {
             let anchor = elem.find('.downloadButton-23tKQp').parent(),
                 link   = ReactUtilities.getReactProperty(anchor[0], 'memoizedProps.href');
@@ -326,7 +379,7 @@ class Quicksave {
                     if (e.shiftKey) {
                         self.openModal($(PluginUtilities.formatString(self.modals.name, {
                             insertFilename: this.local.modals.filenameChoose.insertFilename,
-                            cancel: this.local.modals.generalButtons.cancel, 
+                            cancel: this.local.modals.generalButtons.cancel,
                             save: this.local.modals.generalButtons.save
                         })), 'filenameChoose', link);
                     } else
@@ -341,7 +394,7 @@ class Quicksave {
     loadSettings() {
         this.settings = PluginUtilities.loadSettings(this.getName(), this.defaultSettings);
     }
-    
+
     getSettingsPanel() {
         let panel = $("<form>").addClass("form").css("width", "100%");
         if (this.initialized) this.generateSettings(panel);
@@ -350,7 +403,7 @@ class Quicksave {
     generateSettings(panel) {
         new PluginSettings.ControlGroup(this.local.settings.panel, () => this.saveSettings(), {shown: true}).appendTo(panel).append(
             new PluginSettings.Textbox(this.local.settings.labels.directory, '', this.settings.directory, 'none', text => {
-                text.endsWith('/') 
+                text.endsWith('/')
                     ? this.settings.directory = text
                     : this.settings.directory = text + '/';
             }, {
@@ -385,7 +438,7 @@ class Quicksave {
                 })
         );
     }
-    
+
     addNumber(filename, type, i = 0) {
         let temp = filename + (i > 0 ? ` (${i})` : '');
         if (this.accessSync(this.settings.directory + temp + type))
@@ -399,7 +452,7 @@ class Quicksave {
             name += 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-'[(Math.random() * 64 | 0)];
         return name;
     }
-    
+
     saveCurrentFile(url, filename, overwrite = false) {
         if (url == '') {
             PluginUtilities.showToast(this.local.modals.error.invalidUrl, {type: 'error'});
@@ -410,7 +463,7 @@ class Quicksave {
             fs     = require('fs'),
             dir    = this.settings.directory,
             net    = (url.split('//')[0] == 'https:') ? require('https') : require('http');
-        
+
         if (/:large$/.test(url))
             url = url.replace(/:large$/, '');
 
@@ -419,16 +472,16 @@ class Quicksave {
 
         if (!filename && this.settings.norandom)
             filename = fullFilename.substring(0,fullFilename.lastIndexOf('.'));
-        
+
         if ((!filename && !overwrite && !this.settings.addnum) || (this.settings.randomizeUnknown && filename == 'unknown'))
             filename = this.randomFilename64(this.settings.fnLength);
 
         let filetype = '.' + fullFilename.split('.').slice(-1)[0],
             tries    = 50;
-        
+
         if (this.settings.addnum)
             filename = this.addNumber(filename, filetype);
-        
+
         if (this.accessSync(dir + filename + filetype) && !overwrite && !this.settings.addnum) {
             return this.openModal($(PluginUtilities.formatString(this.modals.error, {
                 alreadyExists: PluginUtilities.formatString(this.local.modals.error.alreadyExists, {filename, filetype}),
@@ -439,21 +492,21 @@ class Quicksave {
                 genRandom: this.local.modals.error.genRandom
             })), 'error', url);
         }
-        
+
         button.html(this.local.downloading);
-        
+
         while (this.accessSync(dir + filename + filetype) && tries-- && !overwrite && !this.settings.addnum && !this.settings.norandom)
             filename = this.randomFilename64(this.settings.fnLength);
-        
+
         if (tries == -1)
             return PluginUtilities.showToast(this.local.noFreeName, {type: 'error'});
-        
+
         filename += filetype;
 
         let dest = dir + filename,
             file = fs.createWriteStream(dest),
             self = this;
-            
+
         net.get(url, res => {
             res.pipe(file);
             file.on('finish', () => {
@@ -464,11 +517,11 @@ class Quicksave {
                 file.close();
             });
         }).on('error', err => {
-            fs.unlink(dest); 
+            fs.unlink(dest);
             PluginUtilities.showToast(err.message, {type: 'error'});
             file.close();
         });
-        
+
     }
     get defaultSettings() {
         return {
@@ -608,7 +661,7 @@ class Quicksave {
                 #quicksave-modal-wrapper .filename:focus {
                     outline: none;
                 }
-                #quicksave-modal-wrapper .inner, 
+                #quicksave-modal-wrapper .inner,
                 #quicksave-modal-wrapper .hint,
                 #quicksave-modal-wrapper .filename {
                     font-family: Whitney,Helvetica Neue,Helvetica,Arial,sans-serif;
