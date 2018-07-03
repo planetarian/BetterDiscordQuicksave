@@ -223,7 +223,7 @@ class Quicksave {
     getAuthor     () { return "Nirewen"             }
     getName       () { return "Quicksave"           }
     getDescription() { return this.local.description}
-    getVersion    () { return "0.2.7"               }
+    getVersion    () { return "0.2.8"               }
     start         () {
         let self = this;
         $('#zeresLibraryScript').remove();
@@ -473,7 +473,8 @@ class Quicksave {
         if (!filename && this.settings.norandom)
             filename = fullFilename.substring(0,fullFilename.lastIndexOf('.'));
 
-        if ((!filename && !overwrite && !this.settings.addnum) || (this.settings.randomizeUnknown && filename == 'unknown'))
+        if ((!filename && !overwrite && !this.settings.addnum)
+         || (this.settings.randomizeUnknown && /^(viewimage|unknown)$/.test(filename)))
             filename = this.randomFilename64(this.settings.fnLength);
 
         let filetype = '.' + fullFilename.split('.').slice(-1)[0],
