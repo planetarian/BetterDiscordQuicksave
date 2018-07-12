@@ -223,12 +223,49 @@ class Quicksave {
     getAuthor     () { return "Nirewen"             }
     getName       () { return "Quicksave"           }
     getDescription() { return this.local.description}
-    getVersion    () { return "0.2.7"               }
+    getVersion    () { return "0.2.8a"               }
     start         () {
         let self = this;
         $('#zeresLibraryScript').remove();
         $('head').append($("<script type='text/javascript' id='zeresLibraryScript' src='https://rauenzi.github.io/BetterDiscordAddons/Plugins/PluginLibrary.js'>"));
+        
+        //console.log("Quicksave edit loaded :)");
+        BdApi.injectCSS("quicksave-style", `
+			.thumbQuicksave {
+				z-index: 9000!important;
 
+				background-color: rgba(51, 51, 51, .8);
+
+				position: absolute;
+				display: block;
+
+				padding: 3px 9px;
+				margin: 5px;
+
+				border-radius: 3px;
+
+				font-family: inherit;
+				color: #FFF;
+				font-weight: 500;
+				font-size: 14px;
+				opacity: 0;
+			}
+
+			.imageWrapper-2p5ogY:hover .thumbQuicksave {
+				opacity: 0.8;
+			}
+
+			.thumbQuicksave:hover {
+				opacity: 1 !important;
+			}
+
+			#qs_button {
+				padding-left: 10px;
+			}
+		`);
+
+		this.injectThumbIcons();
+        
         if (typeof window.ZeresLibrary !== "undefined")
             this.initialize();
         else
@@ -387,6 +424,47 @@ class Quicksave {
                 });
         }
     }
+    
+    injectThumbIcons() {
+		var fs = require('fs');
+		let list = document.querySelectorAll("img");
+		for (let i = 0; i < list.length; i++) {
+			let elem = list[i].parentElement;
+			//console.log(elem);
+			
+			if(	!elem.href
+			 || !elem.classList.contains('imageWrapper-2p5ogY')
+			 ||  elem.querySelector('.thumbQuicksave')
+			) continue;
+
+			let div = document.createElement('div');
+			div.innerHTML = "Save";
+			div.className = "thumbQuicksave";
+
+			let settings = this.loadSettings();
+			fs.access(this.settings.directory, fs.W_OK, (err)=>{
+				if (err)
+					div.innerHTML = "Dir Error";
+				else
+					div.onclick = (e)=>{
+						// Prevent parent from opening the image
+						e.stopPropagation();
+						e.preventDefault();
+                        
+						this.saveThumbImage(e);
+					};
+
+				// appendChild but as the first child
+				elem.insertAdjacentElement('afterbegin', div);
+			});
+		}
+
+		// Originally this code was in mutationobserver, but that wasn't reliable.
+		// Now we use this timeout loop with global img search. Not optimal but
+		// works very well (and maybe even better perfomance wise?)
+		this.injectionTimeout = setTimeout(this.injectThumbIcons.bind(this), 2000);
+	}
+    
     saveSettings() {
         PluginUtilities.saveSettings(this.getName(), this.settings);
     }
@@ -452,7 +530,7 @@ class Quicksave {
             name += 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-'[(Math.random() * 64 | 0)];
         return name;
     }
-
+    
     saveCurrentFile(url, filename, overwrite = false) {
         if (url == '') {
             PluginUtilities.showToast(this.local.modals.error.invalidUrl, {type: 'error'});
@@ -473,7 +551,8 @@ class Quicksave {
         if (!filename && this.settings.norandom)
             filename = fullFilename.substring(0,fullFilename.lastIndexOf('.'));
 
-        if ((!filename && !overwrite && !this.settings.addnum) || (this.settings.randomizeUnknown && filename == 'unknown'))
+        if ((!filename && !overwrite && !this.settings.addnum)
+            || (this.settings.randomizeUnknown && /^(viewimage|unknown)$/.test(filename)))
             filename = this.randomFilename64(this.settings.fnLength);
 
         let filetype = '.' + fullFilename.split('.').slice(-1)[0],
@@ -515,14 +594,36 @@ class Quicksave {
                 if (self.settings.showfn)
                     PluginUtilities.showToast(PluginUtilities.formatString(self.local.filename, {filename}), {type: 'info'});
                 file.close();
+                
             });
         }).on('error', err => {
             fs.unlink(dest);
             PluginUtilities.showToast(err.message, {type: 'error'});
             file.close();
         });
-
     }
+    
+    saveThumbImage(e){
+		// Reimplementation of pull #2, icon in thumbnails
+		var button = e.srcElement;
+		var plugin = BdApi.getPlugin('Quicksave');
+
+
+		var url = button.parentElement.href;
+
+		if(!url) {
+			button.innerHTML = "Error";
+			console.error("Couldn't extract url!");
+			return;
+		}
+
+		button.innerHTML = "Wait";
+        var name = url.split('/')[6];
+        //console.log(name);
+		this.saveCurrentFile(url);
+        button.innerHTML = "Saved!";
+	}
+    
     get defaultSettings() {
         return {
             directory: 'none',
