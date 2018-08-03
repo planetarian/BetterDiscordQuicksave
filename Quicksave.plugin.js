@@ -468,7 +468,7 @@ class Quicksave {
             url = url.replace(/:large$/, '');
             
         // Get the last instance of something that looks like a valid filename, the last instance of anything usable at all
-        let fullFilename = /^\w+:\/\/(?:\w+\.)+\w+\/(?:.*?\/)*?([^?=\/\\]+\.\w{3,4}(?!.*\.)|\w+$)/.exec(url)[1];
+        let fullFilename = /^\w+:\/\/[^\/]+\/(?:.*?\/)*?([^?=\/\\]+\.\w{3,}(?!.*\.)|[\w-\.]+$)/.exec(url)[1];
         // If the URL is so bizarre that nothing matches at all, just give it a random name
         if (!fullFilename)
             fullFilename = this.randomFilename64(this.settings.fnLength);
