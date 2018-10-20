@@ -362,7 +362,10 @@ class Quicksave {
                     }).on('keyup.qs', e => button.html(this.local.quicksave));
                     button.click(e => {
                         button.html(self.local.quicksave);
-                        let filePath = $('.modal-1UGdnR .inner-1JeGVc').find('a').filter('[href^="http"]')[0].attributes['href'].nodeValue;
+                        let filePath = null;
+                        let videoEl = $('.modal-1UGdnR .imageWrapper-2p5ogY video')[0];
+                        if (videoEl) filePath = videoEl.attributes['src'].nodeValue;
+                        else filePath = $('.modal-1UGdnR .inner-1JeGVc').find('a').filter('[href^="http"]')[0].attributes['href'].nodeValue;
                         if (e.shiftKey)
                             self.openModal($(PluginUtilities.formatString(self.modals.name, {
                                 insertFilename: this.local.modals.filenameChoose.insertFilename,
