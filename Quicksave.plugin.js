@@ -566,7 +566,7 @@ class Quicksave {
             filename = fullFilename.substring(0,fullFilename.lastIndexOf('.'));
 
         if ((!filename && !overwrite && !this.settings.addnum)
-            || (this.settings.randomizeUnknown && /^(viewimage|unknown)$/.test(filename)))
+            || (this.settings.randomizeUnknown && /^(small|medium|large|image|viewimage|unknown)$/.test(filename)))
             filename = this.randomFilename64(this.settings.fnLength);
 
         let filetype = '.' + fullFilename.split('.').slice(-1)[0],
