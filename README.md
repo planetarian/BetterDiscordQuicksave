@@ -22,3 +22,15 @@ In order to install, follow the steps of a regular plugin installation:
  - :gb: **English**
  - :es: **Spanish**
  - :tr: **Turkish**
+
+### Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| [<img src="https://avatars0.githubusercontent.com/u/1724041?v=4" width="100px;"/><br /><sub><b>Ash Wolford</b></sub>](http://about.me/ashwolford)<br />[💻](https://github.com/nirewen/quicksave/commits?author=planetarian "Code") | [<img src="https://avatars0.githubusercontent.com/u/30394812?v=4" width="100px;"/><br /><sub><b>Ege</b></sub>](https://ege.js.org/)<br />[🌍](#translation-egecue "Translation") | [<img src="https://avatars1.githubusercontent.com/u/19752093?v=4" width="100px;"/><br /><sub><b>Alberto</b></sub>](https://strappazzon.github.io/)<br />[🌍](#translation-Strappazzon "Translation") | [<img src="https://avatars3.githubusercontent.com/u/35756280?v=4" width="100px;"/><br /><sub><b>matty</b></sub>](https://github.com/murrty)<br />[💻](https://github.com/nirewen/quicksave/commits?author=murrty "Code") [🤔](#ideas-murrty "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/6865942?v=4" width="100px;"/><br /><sub><b>Zack</b></sub>](http://zackrauen.com)<br />[🔧](#tool-rauenzi "Tools") |
+| :---: | :---: | :---: | :---: | :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

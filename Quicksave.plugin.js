@@ -112,59 +112,112 @@ class Quicksave {
                         }
                     }
                 };
-                case "tr": // Turkish
-                    return {
-                        startMessage: "${pluginName} ${version} başladı.",
-                        description: 'Dosyaları kısa bir rastgele adla hızlıca kaydetmenizi sağlar',
-                        quicksave: "Dosyayı kaydet",
-                        as: 'olarak',
-                        finished: 'Tamamlandı',
-                        filename: "Dosya ${filename} olarak kaydedildi.",
-                        saveFail: "Dosya kaydedilirken bir sorun oluştu.",
-                        invalidLocation: "Geçersiz konum",
-                        save: "Kaydet",
-                        reset: "Ayarları sıfırla",
-                        downloading: 'İndiriliyor...',
-                        noFreeName: 'Hata: Failed to find a free file name',
-                        modals: {
-                            generalButtons: {
-                                cancel: 'İptal',
-                                save: 'Kaydet'
-                            },
-                            filenameChoose: {
-                                insertFilename: 'Dosya adını ekle'
-                            },
-                            error: {
-                                alreadyExists: 'Dosya <span class="file-name">${filename}</span>${filetype} zaten var',
-                                genRandom: 'Rastgele oluştur',
-                                overwrite: 'Üzerine Yaz (Overwrite)',
-                                chooseNew: 'Yeni isim seç',
-                                question: 'Ne yapacaksın??',
-                                invalidUrl: 'Geçersiz URL'
-                            }
+            case "tr": // Turkish
+                return {
+                    startMessage: "${pluginName} ${version} başladı.",
+                    description: 'Dosyaları kısa bir rastgele adla hızlıca kaydetmenizi sağlar',
+                    quicksave: "Dosyayı kaydet",
+                    as: 'olarak',
+                    finished: 'Tamamlandı',
+                    filename: "Dosya ${filename} olarak kaydedildi.",
+                    saveFail: "Dosya kaydedilirken bir sorun oluştu.",
+                    invalidLocation: "Geçersiz konum",
+                    save: "Kaydet",
+                    reset: "Ayarları sıfırla",
+                    downloading: 'İndiriliyor...',
+                    noFreeName: 'Hata: Failed to find a free file name',
+                    modals: {
+                        generalButtons: {
+                            cancel: 'İptal',
+                            save: 'Kaydet'
                         },
-                        settings: {
-                            panel: 'Ayar paneli',
-                            labels: {
-                                directory: 'Konum',
-                                original: 'Orijinal ismi koru',
-                                randomizeUnknown: 'Bilinmeyen dosya isimlerini değiştir',
-                                filename: 'İndirme işlemi bittiğinde dosya adını göster',
-                                randomLength: 'Rastgele dosya adı uzunluğu',
-                                autoAddNum: 'Dosya adlarının sonuna otomatik olarak (n) ekle'
-                            },
-                            help: {
-                                original: 'Dosyaları yeni rastgele biri yerine orijinal dosya adıyla kaydedin',
-                                randomizeUnknown: 'Orijinal dosya isimlerini saklarken, dosya adı "unknown" ise rastgele hale getirin.',
-                                filename: 'İndirmenin sonunda dosya adının gösterilip gösterilmeyeceği',
-                                autoAddNum: 'Bir dosyayı aynı ada sahip bir dosyaya kaydederken, dosya adının sonuna (n) ekleyin.'
-                            },
-                            protip: {
-                                label: 'Protip:',
-                                tip: 'Kayıtlı dosyalar rasgetle bir base64 adı alır. Sadece 4 karakter, ~17 milyon farklı dosya adına izin verir (64 ^ 4).'
-                            }
+                        filenameChoose: {
+                            insertFilename: 'Dosya adını ekle'
+                        },
+                        error: {
+                            alreadyExists: 'Dosya <span class="file-name">${filename}</span>${filetype} zaten var',
+                            genRandom: 'Rastgele oluştur',
+                            overwrite: 'Üzerine Yaz (Overwrite)',
+                            chooseNew: 'Yeni isim seç',
+                            question: 'Ne yapacaksın??',
+                            invalidUrl: 'Geçersiz URL'
                         }
-                    };
+                    },
+                    settings: {
+                        panel: 'Ayar paneli',
+                        labels: {
+                            directory: 'Konum',
+                            original: 'Orijinal ismi koru',
+                            randomizeUnknown: 'Bilinmeyen dosya isimlerini değiştir',
+                            filename: 'İndirme işlemi bittiğinde dosya adını göster',
+                            randomLength: 'Rastgele dosya adı uzunluğu',
+                            autoAddNum: 'Dosya adlarının sonuna otomatik olarak (n) ekle'
+                        },
+                        help: {
+                            original: 'Dosyaları yeni rastgele biri yerine orijinal dosya adıyla kaydedin',
+                            randomizeUnknown: 'Orijinal dosya isimlerini saklarken, dosya adı "unknown" ise rastgele hale getirin.',
+                            filename: 'İndirmenin sonunda dosya adının gösterilip gösterilmeyeceği',
+                            autoAddNum: 'Bir dosyayı aynı ada sahip bir dosyaya kaydederken, dosya adının sonuna (n) ekleyin.'
+                        },
+                        protip: {
+                            label: 'Protip:',
+                            tip: 'Kayıtlı dosyalar rasgetle bir base64 adı alır. Sadece 4 karakter, ~17 milyon farklı dosya adına izin verir (64 ^ 4).'
+                        }
+                    }
+                };
+            case "it": // Italian
+				return {
+					startMessage: "${pluginName} ${version} avviato.",
+					description: 'Permette di salvare velocemente le immagini con un nome breve casuale',
+					quicksave: "Salva immagine",
+					as: 'come',
+					finished: 'Fatto',
+					filename: "Immagine salvata come ${filename}",
+					saveFail: "Si è verificato un problema durante il salvataggio.",
+					invalidLocation: "Percorso non valido",
+					save: "Salva",
+					reset: "Reimposta opzioni",
+					downloading: 'Download in corso...',
+					noFreeName: 'Errore: Non è stato possibile trovare un nome utilizzabile per il file',
+					modals: {
+						generalButtons: {
+							cancel: 'Annulla',
+							save: 'Salva'
+						},
+						filenameChoose: {
+							insertFilename: 'Inserisci il nome del file'
+						},
+						error: {
+							alreadyExists: 'Il file <span class="file-name">${filename}</span> esiste già',
+							genRandom: 'Genera casualmente',
+							overwrite: 'Sovrascrivi',
+							chooseNew: 'Scegli un nuovo nome',
+                            question: 'Cosa vuoi fare?',
+                            invalidUrl: 'Invalid URL'
+						}
+					},
+					settings: {
+						panel: 'Pannello di configurazione',
+						labels: {
+							directory: 'Percorso',
+							original: 'Mantieni il nome originale',
+                            randomizeUnknown: 'Replace unknown filenames',
+                            filename: 'Mostra il nome del file una volta completato il download',
+                            randomLength: 'Lunghezza nome del file casuale',
+                            autoAddNum: 'Add (n) at the end of the file names automatically'
+						},
+						help: {
+							original: 'Salva il file con il suo nome originale invece di generarne uno casuale',
+                            randomizeUnknown: 'When keeping original file names, randomize if the file name is "unknown".',
+                            filename: 'Se mostrare il nome del file alla fine oppure no',
+                            autoAddNum: 'When saving a file with the same name of another, add (n) to the end of the file name.'
+						},
+						protip: {
+							label: 'Suggerimento:',
+							tip: 'I file vengono salvati con un nome base64. Solo 4 caratteri possono avere ~17 milioni di combinazioni differenti (64^4).'
+						}
+					}
+				};
             default: // English
                 return {
                     startMessage: "${pluginName} ${version} has started.",
@@ -223,48 +276,11 @@ class Quicksave {
     getAuthor     () { return "Nirewen"             }
     getName       () { return "Quicksave"           }
     getDescription() { return this.local.description}
-    getVersion    () { return "0.2.8a"              }
+    getVersion    () { return "0.3.0"               }
     start         () {
         let self = this;
         $('#zeresLibraryScript').remove();
         $('head').append($("<script type='text/javascript' id='zeresLibraryScript' src='https://rauenzi.github.io/BetterDiscordAddons/Plugins/PluginLibrary.js'>"));
-        
-        //console.log("Quicksave edit loaded :)");
-        BdApi.injectCSS("quicksave-style", `
-			.thumbQuicksave {
-				z-index: 9000!important;
-
-				background-color: rgba(51, 51, 51, .8);
-
-				position: absolute;
-				display: block;
-
-				padding: 3px 9px;
-				margin: 5px;
-
-				border-radius: 3px;
-
-				font-family: inherit;
-				color: #FFF;
-				font-weight: 500;
-				font-size: 14px;
-				opacity: 0;
-			}
-
-			.imageWrapper-2p5ogY:hover .thumbQuicksave {
-				opacity: 0.8;
-			}
-
-			.thumbQuicksave:hover {
-				opacity: 1 !important;
-			}
-
-			#qs_button {
-				padding-left: 10px;
-			}
-		`);
-
-		this.injectThumbIcons();
         
         if (typeof window.ZeresLibrary !== "undefined")
             this.initialize();
@@ -273,10 +289,12 @@ class Quicksave {
     }
     initialize() {
         BdApi.injectCSS(this.getName(), this.css.modals);
+        BdApi.injectCSS(`${this.getName()}-style`, this.css.thumb);
         PluginUtilities.checkForUpdate(this.getName(), this.getVersion(), "https://raw.githubusercontent.com/nirewen/Quicksave/master/Quicksave.plugin.js");
         PluginUtilities.showToast(PluginUtilities.formatString(this.local.startMessage, {pluginName: this.getName(), version: this.getVersion()}));
         this.initialized = true;
         this.loadSettings();
+        this.injectThumbIcons();
     }
     stop  () {
         BdApi.clearCSS(this.getName());
@@ -444,12 +462,12 @@ class Quicksave {
 			div.innerHTML = "Save";
 			div.className = "thumbQuicksave";
 
-			let settings = this.loadSettings();
-			fs.access(this.settings.directory, fs.W_OK, (err)=>{
+			this.loadSettings();
+			fs.access(this.settings.directory, fs.W_OK, (err) => {
 				if (err)
 					div.innerHTML = "Dir Error";
 				else
-					div.onclick = (e)=>{
+					div.onclick = (e) => {
 						// Prevent parent from opening the image
 						e.stopPropagation();
 						e.preventDefault();
@@ -550,9 +568,11 @@ class Quicksave {
             
         // Get the last instance of something that looks like a valid filename, the last instance of anything usable at all
         let fullFilename = /^\w+:\/\/[^\/]+\/(?:.*?\/)*?([^?=\/\\]+\.\w{3,}(?!.*\.)|[\w-\.]+(?=$|\/mp4))/.exec(url)[1];
+        
         // If the URL is so bizarre that nothing matches at all, just give it a random name
         if (!fullFilename)
             fullFilename = this.randomFilename64(this.settings.fnLength);
+        
         // If it's a virtualized URL with no valid extension, best we can do is make one up and let the OS (attempt to) handle the rest.
         let dotIndex = fullFilename.indexOf('.');
         if (dotIndex == -1 || fullFilename.length - dotIndex > 5) { // If we don't have a dot, or we do but it's obviously not an extension
@@ -566,7 +586,7 @@ class Quicksave {
             filename = fullFilename.substring(0,fullFilename.lastIndexOf('.'));
 
         if ((!filename && !overwrite && !this.settings.addnum)
-            || (this.settings.randomizeUnknown && /^(viewimage|unknown)$/.test(filename)))
+            || (this.settings.randomizeUnknown && /^(small|medium|large|image|viewimage|unknown)$/.test(filename)))
             filename = this.randomFilename64(this.settings.fnLength);
 
         let filetype = '.' + fullFilename.split('.').slice(-1)[0],
@@ -881,6 +901,38 @@ class Quicksave {
                     height: 40px;
                     padding: 0 16px;
                     position: relative;
+                }`,
+            thumb: `
+                .thumbQuicksave {
+                    z-index: 9000!important;
+
+                    background-color: rgba(51, 51, 51, .8);
+
+                    position: absolute;
+                    display: block;
+
+                    padding: 3px 9px;
+                    margin: 5px;
+
+                    border-radius: 3px;
+
+                    font-family: inherit;
+                    color: #FFF;
+                    font-weight: 500;
+                    font-size: 14px;
+                    opacity: 0;
+                }
+
+                .imageWrapper-2p5ogY:hover .thumbQuicksave {
+                    opacity: 0.8;
+                }
+
+                .thumbQuicksave:hover {
+                    opacity: 1 !important;
+                }
+
+                #qs_button {
+                    padding-left: 10px;
                 }`
         };
     }

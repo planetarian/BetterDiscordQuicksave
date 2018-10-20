@@ -1,0 +1,59 @@
+{
+  "projectName": "quicksave",
+  "projectOwner": "nirewen",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "planetarian",
+      "name": "Ash Wolford",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1724041?v=4",
+      "profile": "http://about.me/ashwolford",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "egecue",
+      "name": "Ege",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/30394812?v=4",
+      "profile": "https://ege.js.org/",
+      "contributions": [
+        "translation"
+      ]
+    },
+    {
+      "login": "Strappazzon",
+      "name": "Alberto",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/19752093?v=4",
+      "profile": "https://strappazzon.github.io/",
+      "contributions": [
+        "translation"
+      ]
+    },
+    {
+      "login": "murrty",
+      "name": "matty",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/35756280?v=4",
+      "profile": "https://github.com/murrty",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "rauenzi",
+      "name": "Zack",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/6865942?v=4",
+      "profile": "http://zackrauen.com",
+      "contributions": [
+        "tool"
+      ]
+    }
+  ]
+}
