@@ -544,9 +544,20 @@ class Quicksave {
 
         if (/:large$/.test(url))
             url = url.replace(/:large$/, '');
-
-        // Get the last instance of something that looks like a valid filename
-        let fullFilename = /[^?=\/\\]+\.\w{3,4}(?!.*\.)/.exec(url)[0];
+            
+        // Get the last instance of something that looks like a valid filename, the last instance of anything usable at all
+        let fullFilename = /^\w+:\/\/[^\/]+\/(?:.*?\/)*?([^?=\/\\]+\.\w{3,}(?!.*\.)|[\w-\.]+(?=$|\/mp4))/.exec(url)[1];
+        // If the URL is so bizarre that nothing matches at all, just give it a random name
+        if (!fullFilename)
+            fullFilename = this.randomFilename64(this.settings.fnLength);
+        // If it's a virtualized URL with no valid extension, best we can do is make one up and let the OS (attempt to) handle the rest.
+        let dotIndex = fullFilename.indexOf('.');
+        if (dotIndex == -1 || fullFilename.length - dotIndex > 5) { // If we don't have a dot, or we do but it's obviously not an extension
+            if (url.endsWith('/mp4'))
+                fullFilename += '.mp4';
+            else
+                fullFilename += '.jpg';
+        }
 
         if (!filename && this.settings.norandom)
             filename = fullFilename.substring(0,fullFilename.lastIndexOf('.'));
