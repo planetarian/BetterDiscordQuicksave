@@ -229,43 +229,6 @@ class Quicksave {
         $('#zeresLibraryScript').remove();
         $('head').append($("<script type='text/javascript' id='zeresLibraryScript' src='https://rauenzi.github.io/BetterDiscordAddons/Plugins/PluginLibrary.js'>"));
         
-        //console.log("Quicksave edit loaded :)");
-        BdApi.injectCSS("quicksave-style", `
-			.thumbQuicksave {
-				z-index: 9000!important;
-
-				background-color: rgba(51, 51, 51, .8);
-
-				position: absolute;
-				display: block;
-
-				padding: 3px 9px;
-				margin: 5px;
-
-				border-radius: 3px;
-
-				font-family: inherit;
-				color: #FFF;
-				font-weight: 500;
-				font-size: 14px;
-				opacity: 0;
-			}
-
-			.imageWrapper-2p5ogY:hover .thumbQuicksave {
-				opacity: 0.8;
-			}
-
-			.thumbQuicksave:hover {
-				opacity: 1 !important;
-			}
-
-			#qs_button {
-				padding-left: 10px;
-			}
-		`);
-
-		this.injectThumbIcons();
-        
         if (typeof window.ZeresLibrary !== "undefined")
             this.initialize();
         else
@@ -273,10 +236,12 @@ class Quicksave {
     }
     initialize() {
         BdApi.injectCSS(this.getName(), this.css.modals);
+        BdApi.injectCSS(`${this.getName()}-style`, this.css.thumb);
         PluginUtilities.checkForUpdate(this.getName(), this.getVersion(), "https://raw.githubusercontent.com/nirewen/Quicksave/master/Quicksave.plugin.js");
         PluginUtilities.showToast(PluginUtilities.formatString(this.local.startMessage, {pluginName: this.getName(), version: this.getVersion()}));
         this.initialized = true;
         this.loadSettings();
+        this.injectThumbIcons();
     }
     stop  () {
         BdApi.clearCSS(this.getName());
@@ -444,12 +409,12 @@ class Quicksave {
 			div.innerHTML = "Save";
 			div.className = "thumbQuicksave";
 
-			let settings = this.loadSettings();
-			fs.access(this.settings.directory, fs.W_OK, (err)=>{
+			this.loadSettings();
+			fs.access(this.settings.directory, fs.W_OK, (err) => {
 				if (err)
 					div.innerHTML = "Dir Error";
 				else
-					div.onclick = (e)=>{
+					div.onclick = (e) => {
 						// Prevent parent from opening the image
 						e.stopPropagation();
 						e.preventDefault();
@@ -550,9 +515,11 @@ class Quicksave {
             
         // Get the last instance of something that looks like a valid filename, the last instance of anything usable at all
         let fullFilename = /^\w+:\/\/[^\/]+\/(?:.*?\/)*?([^?=\/\\]+\.\w{3,}(?!.*\.)|[\w-\.]+(?=$|\/mp4))/.exec(url)[1];
+        
         // If the URL is so bizarre that nothing matches at all, just give it a random name
         if (!fullFilename)
             fullFilename = this.randomFilename64(this.settings.fnLength);
+        
         // If it's a virtualized URL with no valid extension, best we can do is make one up and let the OS (attempt to) handle the rest.
         let dotIndex = fullFilename.indexOf('.');
         if (dotIndex == -1 || fullFilename.length - dotIndex > 5) { // If we don't have a dot, or we do but it's obviously not an extension
@@ -881,6 +848,38 @@ class Quicksave {
                     height: 40px;
                     padding: 0 16px;
                     position: relative;
+                }`,
+            thumb: `
+                .thumbQuicksave {
+                    z-index: 9000!important;
+
+                    background-color: rgba(51, 51, 51, .8);
+
+                    position: absolute;
+                    display: block;
+
+                    padding: 3px 9px;
+                    margin: 5px;
+
+                    border-radius: 3px;
+
+                    font-family: inherit;
+                    color: #FFF;
+                    font-weight: 500;
+                    font-size: 14px;
+                    opacity: 0;
+                }
+
+                .imageWrapper-2p5ogY:hover .thumbQuicksave {
+                    opacity: 0.8;
+                }
+
+                .thumbQuicksave:hover {
+                    opacity: 1 !important;
+                }
+
+                #qs_button {
+                    padding-left: 10px;
                 }`
         };
     }
