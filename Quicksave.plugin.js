@@ -223,7 +223,7 @@ class Quicksave {
     getAuthor     () { return "Nirewen"             }
     getName       () { return "Quicksave"           }
     getDescription() { return this.local.description}
-    getVersion    () { return "0.2.8a"               }
+    getVersion    () { return "0.2.8a"              }
     start         () {
         let self = this;
         $('#zeresLibraryScript').remove();
