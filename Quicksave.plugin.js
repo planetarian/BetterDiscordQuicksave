@@ -396,6 +396,10 @@ class Quicksave {
                     });
                 }
                 elem.after(button);
+
+                // Add a divider before the new link for consistency with other lightbox link plugins
+                let divider = $('<span class="downloadLink-1ywL9o size14-3iUx6q weightMedium-2iZe9B" style="margin: 0px 5px;"> | </span>');
+                elem.after(divider);
             });
         }
 
@@ -930,10 +934,6 @@ class Quicksave {
 
                 .thumbQuicksave:hover {
                     opacity: 1 !important;
-                }
-
-                #qs_button {
-                    padding-left: 10px;
                 }`
         };
     }
