@@ -367,6 +367,7 @@ class Quicksave {
         if (elem.hasClass('backdrop-1wrmKB')) {
             let elem = $('.modal-1UGdnR .downloadLink-1ywL9o');
             if (!elem) return;
+            elem = elem.first();
 
             fs.access(this.settings.directory, fs.W_OK, err => {
                 let button = $('<a id="qs_button" class="anchor-3Z-8Bb downloadLink-1ywL9o size14-3iUx6q weightMedium-2iZe9B"></a>');
