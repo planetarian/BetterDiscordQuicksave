@@ -928,6 +928,7 @@ class Quicksave {
                     opacity: 0;
                 }
 
+                .messageGroupCozy-1BZuO8:hover .thumbQuicksave,
                 .imageWrapper-2p5ogY:hover .thumbQuicksave {
                     opacity: 0.8;
                 }
